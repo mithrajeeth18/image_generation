@@ -88,3 +88,56 @@ body {
     color: #fff;
     cursor: pointer;
 }
+
+.main-container {
+    display: flex;
+}
+
+.canvas-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.drag-area {
+    width: 700px;
+    height: 500px;
+    border: 2px dashed #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.drag-area.active {
+    border-color: #007bff;
+}
+
+.drag-area .icon {
+    font-size: 50px;
+    margin-bottom: 20px;
+}
+
+.drag-area header {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.drag-area span {
+    margin: 10px 0;
+}
+
+.drag-area button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.drag-area button:hover {
+    background-color: #0056b3;
+}
