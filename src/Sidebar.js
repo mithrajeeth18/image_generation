@@ -1,68 +1,92 @@
-import React from "react";
-import "./Sidebar.css";
+import React from 'react';
+import './Sidebar.css';
 
-const Sidebar = ({
-  onAddText,
-  onAddShape,
-  onAddLine,
-  onDownloadImage,
-  onFontChange,
-  onFontSizeChange,
-  onColorChange,
-  selectedFont,
-  selectedFontSize,
-}) => {
-  const handleColorChange = (e) => {
-    const color = e.target.value;
-    onColorChange(color);
+function PropertiesSidebar({ textProperties, setTextProperties }) {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setTextProperties((prevProps) => ({
+      ...prevProps,
+      [name]: value,
+    }));
   };
 
+  const fonts = ["Arial", "Verdana", "Poppins", "Times New Roman", "Courier New", "Lucida Console", "Georgia", "Tahoma", "Impact", "Comic Sans MS"];
+
   return (
-    <div className="sidebar">
-      <h3>Tools</h3>
-      <button className="sidebar-button" onClick={onAddText}>
-        Add Text
-      </button>
-      <button className="sidebar-button" onClick={onAddShape}>
-        Add Shape
-      </button>
-      <button className="sidebar-button" onClick={onAddLine}>
-        Add Line
-      </button>
-      <button className="sidebar-button" onClick={onDownloadImage}>
-        Download Image
-      </button>
-
-      <div className="font-controls">
-        <label htmlFor="fontSelect">Font:</label>
-        <select id="fontSelect" value={selectedFont} onChange={onFontChange}>
-          <option value="Poppins">Poppins</option>
-          <option value="Arial">Arial</option>
-          <option value="Times New Roman">Times New Roman</option>
-          {/* Add more fonts as needed */}
+    <div className="properties-sidebar">
+      <h2>Tools</h2>
+      <div className="control-buttons">
+        <button className="control-button" onClick={() => setTextProperties(prev => ({ ...prev, type: 'text' }))}>
+          Add Text
+        </button>
+        <button className="control-button" onClick={() => setTextProperties(prev => ({ ...prev, type: 'shape' }))}>
+          Add Shape
+        </button>
+        <button className="control-button" onClick={() => setTextProperties(prev => ({ ...prev, type: 'line' }))}>
+          Add Line
+        </button>
+        <button className="control-button" onClick={() => setTextProperties(prev => ({ ...prev, action: 'download' }))}>
+          Download Image
+        </button>
+      </div>
+      <label>
+        Font:
+        <select
+          name="fontFamily"
+          value={textProperties.fontFamily}
+          onChange={handleChange}
+        >
+          {fonts.map(font => (
+            <option key={font} value={font}>{font}</option>
+          ))}
         </select>
+      </label>
+      <div className="form-group">
+        <div>
+          <label>
+            Font Size:
+            <input
+              type="number"
+              name="fontSize"
+              value={textProperties.fontSize}
+              onChange={handleChange}
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            Color:
+            <input
+              type="color"
+              name="color"
+              value={textProperties.color}
+              onChange={handleChange}
+            />
+          </label>
+        </div>
       </div>
-      <div className="font-size-controls">
-        <label htmlFor="fontSizeInput">Font Size:</label>
-        <input
-          type="number"
-          id="fontSizeInput"
-          value={selectedFontSize}
-          onChange={onFontSizeChange}
-        />
+      <div className="form-group">
+        <button className="control-button" onClick={() => setTextProperties(prev => ({ ...prev, fontWeight: prev.fontWeight === 'bold' ? 'normal' : 'bold' }))}>
+          Bold
+        </button>
+        <button className="control-button" onClick={() => setTextProperties(prev => ({ ...prev, fontStyle: prev.fontStyle === 'italic' ? 'normal' : 'italic' }))}>
+          Italic
+        </button>
+        <button className="control-button" onClick={() => setTextProperties(prev => ({ ...prev, textDecoration: prev.textDecoration === 'underline' ? 'none' : 'underline' }))}>
+          Underline
+        </button>
       </div>
-
-      <div className="color-controls">
-        <label htmlFor="colorPicker">Color:</label>
+      <label>
+        Background Color:
         <input
           type="color"
-          id="colorPicker"
-          defaultValue="#ffffff"
-          onChange={handleColorChange}
+          name="backgroundColor"
+          value={textProperties.backgroundColor}
+          onChange={handleChange}
         />
-      </div>
+      </label>
     </div>
   );
-};
+}
 
-export default Sidebar;
+export default PropertiesSidebar;

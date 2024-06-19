@@ -1,14 +1,20 @@
-// src/App.js
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
-import DragAndDrop from "./DragAndDrop";
-import Main from "./Main";
+import DragAndDropWithText from "./DragAndDrop";
+import PropertiesSidebar from "./Sidebar";
 
 function App() {
+  const [textProperties, setTextProperties] = useState({
+    content: "Enter text...",
+    color: "#ffffff",
+    fontSize: 20,
+    fontFamily: "Poppins",
+  });
+
   return (
     <div className="App">
-      
-      <DragAndDrop/>
+      <PropertiesSidebar textProperties={textProperties} setTextProperties={setTextProperties} />
+      <DragAndDropWithText textProperties={textProperties} />
     </div>
   );
 }
