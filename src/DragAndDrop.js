@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudUploadAlt } from "@fortawesome/free-solid-svg-icons";
 import { fabric } from "fabric";
 
-const DragAndDropWithText = ({ textProperties }) => {
+const DragAndDropWithText = ({ textProperties, setCanvas }) => {
   const [file, setFile] = useState(null);
   const [active, setActive] = useState(false);
   const dropAreaRef = useRef(null);
@@ -42,8 +42,11 @@ const DragAndDropWithText = ({ textProperties }) => {
   useEffect(() => {
     if (file) {
       const canvasElement = canvasRef.current;
-      const fabricCanvas = new fabric.Canvas(canvasElement);
+      const fabricCanvas = new fabric.Canvas(canvasElement, {
+        backgroundColor: 'white', // Set canvas background to white
+      });
       fabricCanvasRef.current = fabricCanvas;
+      setCanvas(fabricCanvas); // Set the canvas reference
 
       fabric.Image.fromURL(file, (img) => {
         img.set({
@@ -62,69 +65,7 @@ const DragAndDropWithText = ({ textProperties }) => {
         fabricCanvas.dispose();
       };
     }
-  }, [file]);
-
-  useEffect(() => {
-    if (fabricCanvasRef.current) {
-      const { type, content, color, fontSize, fontFamily, fontWeight, fontStyle, textDecoration, backgroundColor, action } = textProperties;
-
-      if (type === 'text') {
-        addText(content, color, fontSize, fontFamily, fontWeight, fontStyle, textDecoration, backgroundColor);
-      }
-
-      if (action === 'download') {
-        downloadImage();
-      }
-    }
-  }, [textProperties]);
-
-  const addText = (content, color, fontSize, fontFamily, fontWeight, fontStyle, textDecoration, backgroundColor) => {
-    const text = new fabric.IText(content, {
-      left: 100,
-      top: 100,
-      fill: color,
-      fontSize,
-      fontFamily,
-      fontWeight,
-      fontStyle,
-      textDecoration,
-      backgroundColor,
-    });
-    fabricCanvasRef.current.add(text);
-    fabricCanvasRef.current.setActiveObject(text);
-    text.enterEditing();
-  };
-
-  const addShape = () => {
-    const rect = new fabric.Rect({
-      left: 100,
-      top: 100,
-      fill: 'red',
-      width: 60,
-      height: 70
-    });
-    fabricCanvasRef.current.add(rect);
-  };
-
-  const addLine = () => {
-    const line = new fabric.Line([50, 100, 200, 200], {
-      left: 100,
-      top: 100,
-      stroke: 'blue'
-    });
-    fabricCanvasRef.current.add(line);
-  };
-
-  const downloadImage = () => {
-    const dataURL = fabricCanvasRef.current.toDataURL({
-      format: "png",
-      quality: 1,
-    });
-    const link = document.createElement("a");
-    link.href = dataURL;
-    link.download = "canvas_image.png";
-    link.click();
-  };
+  }, [file, setCanvas]);
 
   return (
     <div className="container">
@@ -140,7 +81,7 @@ const DragAndDropWithText = ({ textProperties }) => {
       >
         <canvas ref={canvasRef} />
         {!file && (
-          <>
+          <div className="upload-message">
             <div className="icon">
               <FontAwesomeIcon icon={faCloudUploadAlt} />
             </div>
@@ -157,25 +98,9 @@ const DragAndDropWithText = ({ textProperties }) => {
               hidden
               onChange={handleFileSelect}
             />
-          </>
+          </div>
         )}
       </div>
-      {file && (
-        <div className="controls">
-          <button className="control-button" onClick={() => addText(textProperties.content, textProperties.color, textProperties.fontSize, textProperties.fontFamily, textProperties.fontWeight, textProperties.fontStyle, textProperties.textDecoration, textProperties.backgroundColor)}>
-            Add Text
-          </button>
-          <button className="control-button" onClick={addShape}>
-            Add Shape
-          </button>
-          <button className="control-button" onClick={addLine}>
-            Add Line
-          </button>
-          <button className="control-button" onClick={downloadImage}>
-            Download Image
-          </button>
-        </div>
-      )}
     </div>
   );
 };
