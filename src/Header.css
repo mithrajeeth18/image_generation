@@ -1,5 +1,6 @@
 .navbar {
     padding: 0.75rem;
+    background-color: #0f3cc9;
   }
   
   .navbar-brand {
@@ -17,3 +18,9 @@
     color: #d3d3d3 !important;
   }
   
+
+.navbar-logo {
+  height: 30px; /* Adjust as needed */
+  margin-right: 10px;
+  margin-left: 10px;
+}

@@ -1,5 +1,6 @@
 import React from 'react';
 import './Header.css';
+import logo from './logoJio.svg.png'; // Make sure you have a logo image in your src folder
 
 function Header({ canvas }) {
   const downloadImage = async () => {
@@ -29,8 +30,10 @@ function Header({ canvas }) {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a className="navbar-brand" href="#">JioImage</a>
+    <nav className="navbar navbar-expand-lg navbar-dark">
+      <a className="navbar-brand" href="#">
+        <img src={logo} alt="Jio Logo" className="navbar-logo" /> JioBanners
+      </a>
       <div className="collapse navbar-collapse" id="navbarNav">
         <ul className="navbar-nav ml-auto">
           <li className="nav-item">

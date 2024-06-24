@@ -4,6 +4,36 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBold, faItalic, faUnderline, faShapes, faTextWidth } from '@fortawesome/free-solid-svg-icons';
 import { fabric } from 'fabric';
 
+const ShapeIcon = ({ shape, onClick }) => (
+  <div className="shape-button" onClick={onClick}>
+    {shape === 'rectangle' && (
+      <svg viewBox="0 0 64 64" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+        <path d="M0 0h64v64H0V0"></path>
+      </svg>
+    )}
+    {shape === 'circle' && (
+      <svg viewBox="0 0 64 64" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+        <circle cx="32" cy="32" r="32"></circle>
+      </svg>
+    )}
+    {shape === 'triangle' && (
+      <svg viewBox="0 0 64 64" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+        <polygon points="32,0 64,64 0,64"></polygon>
+      </svg>
+    )}
+    {shape === 'line' && (
+      <svg viewBox="0 0 64 64" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+        <line x1="0" y1="32" x2="64" y2="32" stroke="currentColor" strokeWidth="4"></line>
+      </svg>
+    )}
+    {shape === 'diamond' && (
+      <svg viewBox="0 0 64 64" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+        <polygon points="32,0 64,32 32,64 0,32"></polygon>
+      </svg>
+    )}
+  </div>
+);
+
 function Sidebar({ textProperties, setTextProperties, canvas }) {
   const [isTextSettingsOpen, setIsTextSettingsOpen] = useState(false);
   const [isShapeSettingsOpen, setIsShapeSettingsOpen] = useState(false);
@@ -118,6 +148,18 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
             stroke: 'black',
           });
           break;
+        case 'diamond':
+          shapeObject = new fabric.Polygon([
+            { x: 32, y: 0 },
+            { x: 64, y: 32 },
+            { x: 32, y: 64 },
+            { x: 0, y: 32 }
+          ], {
+            left: 100,
+            top: 100,
+            fill: 'purple',
+          });
+          break;
         default:
           shapeObject = null;
       }
@@ -132,7 +174,18 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
 
   const applyStyle = (style, value) => {
     if (selectedText) {
-      selectedText.set(style, value);
+      if (style === 'fontWeight') {
+        const newFontWeight = selectedText.fontWeight === 'bold' ? 'normal' : 'bold';
+        selectedText.set('fontWeight', newFontWeight);
+      } else if (style === 'fontStyle') {
+        const newFontStyle = selectedText.fontStyle === 'italic' ? 'normal' : 'italic';
+        selectedText.set('fontStyle', newFontStyle);
+      } else if (style === 'textDecoration') {
+        const newTextDecoration = selectedText.textDecoration === 'underline' ? 'none' : 'underline';
+        selectedText.set('textDecoration', newTextDecoration);
+      } else {
+        selectedText.set(style, value);
+      }
       canvas.bringToFront(selectedText); // Ensure the selected text stays on top
       canvas.renderAll();
     }
@@ -141,12 +194,16 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
   const toggleTextSettings = () => {
     setIsTextSettingsOpen(!isTextSettingsOpen);
     if (!isTextSettingsOpen) {
+      setIsShapeSettingsOpen(false); // Close shape settings if open
       addText(); // Add text to the canvas when the button is clicked
     }
   };
 
   const toggleShapeSettings = () => {
     setIsShapeSettingsOpen(!isShapeSettingsOpen);
+    if (!isShapeSettingsOpen) {
+      setIsTextSettingsOpen(false); // Close text settings if open
+    }
   };
 
   return (
@@ -213,10 +270,17 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
         </div>
         {isShapeSettingsOpen && (
           <div className="shape-settings-window">
-            <button className="shape-button" onClick={() => addShape('rectangle')}>Rectangle</button>
-            <button className="shape-button" onClick={() => addShape('circle')}>Circle</button>
-            <button className="shape-button" onClick={() => addShape('triangle')}>Triangle</button>
-            <button className="shape-button" onClick={() => addShape('line')}>Line</button>
+            <div className="shape-row">
+              <ShapeIcon shape="rectangle" onClick={() => addShape('rectangle')} />
+              <ShapeIcon shape="circle" onClick={() => addShape('circle')} />
+            </div>
+            <div className="shape-row">
+              <ShapeIcon shape="triangle" onClick={() => addShape('triangle')} />
+              <ShapeIcon shape="line" onClick={() => addShape('line')} />
+            </div>
+            <div className="shape-row">
+              <ShapeIcon shape="diamond" onClick={() => addShape('diamond')} />
+            </div>
           </div>
         )}
       </div>

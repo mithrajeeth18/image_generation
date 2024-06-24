@@ -3,6 +3,7 @@ import './App.css';
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import DragAndDropWithText from "./DragAndDrop";
+import Footer from "./Footer"; // Import the Footer component
 
 function App() {
   const [textProperties, setTextProperties] = useState({
@@ -33,6 +34,7 @@ function App() {
           />
         </div>
       </div>
+      <Footer /> {/* Add the Footer component */}
     </div>
   );
 }

@@ -58,7 +58,8 @@ const DragAndDropWithText = ({ textProperties, setCanvas }) => {
         fabricCanvas.setWidth(700);
         fabricCanvas.setHeight(500);
         fabricCanvas.add(img);
-        fabricCanvas.sendToBack(img);
+        img.set({ selectable: false }); // Make image non-selectable
+        fabricCanvas.sendToBack(img); // Send image to back
       });
 
       return () => {
