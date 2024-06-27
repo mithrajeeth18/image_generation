@@ -1,3 +1,5 @@
+/* Sidebar.css */
+
 .sidebar-container {
   display: flex;
   flex-direction: column;
@@ -44,11 +46,11 @@
   margin-top: 5px;
 }
 
-.text-settings-window{
+.text-settings-window {
   background-color: #ffffff;
   border-radius: 8px;
   padding: 10px;
-  width: 160px; /* Reduced width */
+  width: 230px; /* Reduced width */
   position: absolute;
   left: 85px;
   top: 70px; /* Adjust to ensure it stays below the header */
@@ -67,35 +69,25 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.text-settings-window label,
-.shape-settings-window label {
+.customize-settings-window {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 10px;
+  width: 200px;
+  position: absolute;
+  left: 85px;
+  top: 300px; /* Adjust to ensure it stays below the header */
+  z-index: 10;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.customize-settings-window label {
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
 }
 
-.text-settings-window .form-group,
-.shape-settings-window .form-group {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.font-size-group label {
-  display: flex;
-  flex-direction: column;
-  width: 80px; /* Adjust width as needed */
-}
-
-.color-group label {
-  display: flex;
-  flex-direction: column;
-  width: 80px; /* Adjust width as needed */
-}
-
-.icon-button,
-.shape-button {
+.resize-button {
   padding: 10px;
   font-size: 14px;
   font-weight: 600;
@@ -105,39 +97,25 @@
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.3s;
-  margin-bottom: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.icon-button:hover,
-.shape-button:hover {
+.resize-button:hover {
   background-color: #2980b9;
 }
 
-.icon {
-  font-size: 16px;
+.color-picker {
+  margin-top: 20px;
 }
 
-.shape-row {
+.color-options {
   display: flex;
-  justify-content: space-around;
-  margin-bottom: 5px; /* Reduced margin */
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-.shape-button {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #3498db;
-  border-radius: 8px;
-}
-
-.shape-button svg {
-  width: 24px;
-  height: 24px;
-  fill: #ffffff;
+.color-option {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
 }

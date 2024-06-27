@@ -1,20 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Header.css';
 import logo from './logoJio.svg.png'; // Make sure you have a logo image in your src folder
 
 function Header({ canvas }) {
-  const downloadImage = async () => {
+  const [dropdownVisible, setDropdownVisible] = useState(false); // State to manage dropdown visibility
+
+  const handleFormatChange = (selectedFormat) => {
+    setDropdownVisible(false); // Close the dropdown after selection
+    downloadImage(selectedFormat);
+  };
+
+  const downloadImage = async (selectedFormat) => {
     if (canvas) {
       const dataURL = canvas.toDataURL({
-        format: 'png',
+        format: selectedFormat,
         quality: 1,
       });
+
       const blob = await (await fetch(dataURL)).blob();
 
       const opts = {
         types: [{
-          description: 'PNG Image',
-          accept: {'image/png': ['.png']},
+          description: `${selectedFormat.toUpperCase()} Image`,
+          accept: { [`image/${selectedFormat}`]: [`.${selectedFormat}`] },
         }],
       };
 
@@ -39,12 +47,15 @@ function Header({ canvas }) {
           <li className="nav-item">
             <a className="nav-link" href="#">Generate</a>
           </li>
-          <li className="nav-item">
-            <a className="nav-link" href="#" onClick={downloadImage}>Download</a>
+          <li className="nav-item download-container">
+            <a className="nav-link" href="#" onClick={() => setDropdownVisible(!dropdownVisible)}>Download</a>
+            {dropdownVisible && (
+              <div className="dropdown-content">
+                <a href="#" onClick={() => handleFormatChange('jpeg')}>JPEG</a>
+                <a href="#" onClick={() => handleFormatChange('png')}>PNG</a>
+              </div>
+            )}
           </li>
-          {/* <li className="nav-item">
-            <a className="nav-link" href="#">Preview</a>
-          </li> */}
         </ul>
       </div>
     </nav>

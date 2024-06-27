@@ -1,26 +1,58 @@
+/* Header.css */
+
 .navbar {
-    padding: 0.75rem;
-    background-color: #0f3cc9;
-  }
-  
-  .navbar-brand {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  
-  .nav-link {
-    color: #ffffff !important;
-    margin-right: 1rem;
-    font-size: 1.25rem;
-  }
-  
-  .nav-link:hover {
-    color: #d3d3d3 !important;
-  }
-  
+  padding: 0.75rem;
+  background-color: #0f3cc9;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.nav-link {
+  color: #ffffff !important;
+  margin-right: 1rem;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  color: #d3d3d3 !important;
+}
 
 .navbar-logo {
   height: 30px; /* Adjust as needed */
   margin-right: 10px;
   margin-left: 10px;
+}
+
+.download-container {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  right: 0;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.download-container .dropdown-content {
+  display: block;
 }

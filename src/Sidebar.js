@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBold, faItalic, faUnderline, faShapes, faTextWidth } from '@fortawesome/free-solid-svg-icons';
+import { faBold, faItalic, faUnderline, faShapes, faTextWidth, faAlignLeft, faAlignRight, faAlignCenter, faAlignJustify, faCog, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { fabric } from 'fabric';
 
 const ShapeIcon = ({ shape, onClick }) => (
@@ -34,10 +34,40 @@ const ShapeIcon = ({ shape, onClick }) => (
   </div>
 );
 
+const handleAlignText = (alignment, canvas) => {
+  const activeObject = canvas.getActiveObject();
+  if (activeObject && activeObject.type === 'i-text') {
+    switch (alignment) {
+      case 'left':
+        activeObject.set({ left: 0 });
+        break;
+      case 'center':
+        activeObject.set({ left: canvas.width / 2 - activeObject.width / 2 });
+        break;
+      case 'right':
+        activeObject.set({ left: canvas.width - activeObject.width });
+        break;
+      case 'top':
+        activeObject.set({ top: 0 });
+        break;
+      case 'bottom':
+        activeObject.set({ top: canvas.height - activeObject.height });
+        break;
+      default:
+        break;
+    }
+    canvas.renderAll();
+  }
+};
+
 function Sidebar({ textProperties, setTextProperties, canvas }) {
   const [isTextSettingsOpen, setIsTextSettingsOpen] = useState(false);
   const [isShapeSettingsOpen, setIsShapeSettingsOpen] = useState(false);
+  const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
   const [selectedText, setSelectedText] = useState(null);
+  const [canvasWidth, setCanvasWidth] = useState(700);
+  const [canvasHeight, setCanvasHeight] = useState(500);
+  const fileInputRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,6 +75,13 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
       ...prevProps,
       [name]: value,
     }));
+    if (selectedText) {
+      selectedText.set(name, value);
+      if (name === 'color') {
+        selectedText.set('fill', value); // Ensure color is updated
+      }
+      canvas.renderAll();
+    }
   };
 
   const fonts = ["Arial", "Verdana", "Poppins", "Times New Roman", "Courier New", "Lucida Console", "Georgia", "Tahoma", "Impact", "Comic Sans MS"];
@@ -64,26 +101,11 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
     };
   }, [canvas]);
 
-  useEffect(() => {
-    if (selectedText) {
-      selectedText.set({
-        fill: textProperties.color,
-        fontSize: textProperties.fontSize,
-        fontFamily: textProperties.fontFamily,
-        fontWeight: textProperties.fontWeight,
-        fontStyle: textProperties.fontStyle,
-        textDecoration: textProperties.textDecoration,
-      });
-      canvas.bringToFront(selectedText); // Ensure the text stays on top
-      canvas.renderAll();
-    }
-  }, [textProperties]);
-
   const handleSelection = (e) => {
     const activeObject = e.target;
     if (activeObject && activeObject.type === 'i-text') {
       setSelectedText(activeObject);
-      canvas.bringToFront(activeObject); // Ensure the selected text stays on top
+      updateTextProperties(activeObject); // Update the state with the selected text properties
     }
   };
 
@@ -91,12 +113,23 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
     setSelectedText(null);
   };
 
+  const updateTextProperties = (textObject) => {
+    setTextProperties({
+      color: textObject.fill,
+      fontSize: textObject.fontSize,
+      fontFamily: textObject.fontFamily,
+      fontWeight: textObject.fontWeight,
+      fontStyle: textObject.fontStyle,
+      textDecoration: textObject.textDecoration,
+    });
+  };
+
   const addText = () => {
     if (canvas) {
       const text = new fabric.IText('Enter text...', {
         left: 100,
         top: 100,
-        fill: textProperties.color,
+        fill: textProperties.color, // Use textProperties.color
         fontSize: textProperties.fontSize,
         fontFamily: textProperties.fontFamily,
         fontWeight: textProperties.fontWeight,
@@ -105,7 +138,6 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
       });
       canvas.add(text);
       canvas.setActiveObject(text);
-      canvas.bringToFront(text); // Ensure the text stays on top
       setSelectedText(text);
       canvas.renderAll();
     }
@@ -166,27 +198,30 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
       if (shapeObject) {
         canvas.add(shapeObject);
         canvas.setActiveObject(shapeObject);
-        canvas.bringToFront(shapeObject); // Ensure the shape stays on top
         canvas.renderAll();
       }
     }
   };
 
-  const applyStyle = (style, value) => {
+  const applyStyle = (style) => {
     if (selectedText) {
-      if (style === 'fontWeight') {
-        const newFontWeight = selectedText.fontWeight === 'bold' ? 'normal' : 'bold';
-        selectedText.set('fontWeight', newFontWeight);
-      } else if (style === 'fontStyle') {
-        const newFontStyle = selectedText.fontStyle === 'italic' ? 'normal' : 'italic';
-        selectedText.set('fontStyle', newFontStyle);
-      } else if (style === 'textDecoration') {
-        const newTextDecoration = selectedText.textDecoration === 'underline' ? 'none' : 'underline';
-        selectedText.set('textDecoration', newTextDecoration);
-      } else {
-        selectedText.set(style, value);
+      let newValue;
+      switch (style) {
+        case 'fontWeight':
+          newValue = selectedText.fontWeight === 'bold' ? 'normal' : 'bold';
+          selectedText.set('fontWeight', newValue);
+          break;
+        case 'fontStyle':
+          newValue = selectedText.fontStyle === 'italic' ? 'normal' : 'italic';
+          selectedText.set('fontStyle', newValue);
+          break;
+        case 'textDecoration':
+          newValue = selectedText.textDecoration.includes('underline') ? selectedText.textDecoration.replace('underline', '') : `${selectedText.textDecoration} underline`;
+          selectedText.set('textDecoration', newValue.trim());
+          break;
+        default:
+          break;
       }
-      canvas.bringToFront(selectedText); // Ensure the selected text stays on top
       canvas.renderAll();
     }
   };
@@ -205,6 +240,102 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
       setIsTextSettingsOpen(false); // Close text settings if open
     }
   };
+
+  const handleCustomize = () => {
+    setIsCustomizeOpen(!isCustomizeOpen);
+    if (!isCustomizeOpen) {
+      setIsTextSettingsOpen(false); // Close other panels if open
+      setIsShapeSettingsOpen(false);
+    }
+  };
+
+  const handleUploads = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleResizeCanvas = () => {
+    if (canvas) {
+      canvas.setWidth(canvasWidth);
+      canvas.setHeight(canvasHeight);
+      canvas.renderAll();
+    }
+  };
+
+  const handleBackgroundColorChange = (color) => {
+    if (canvas) {
+      if (color.startsWith('linear-gradient')) {
+        const gradientRect = new fabric.Rect({
+          left: 0,
+          top: 0,
+          width: canvas.getWidth(),
+          height: canvas.getHeight(),
+          selectable: false,
+          hoverCursor: 'default'
+        });
+        gradientRect.setGradient('fill', {
+          type: 'linear',
+          x1: 0,
+          y1: 0,
+          x2: gradientRect.width,
+          y2: 0,
+          colorStops: color.match(/#\w{6}/g).reduce((acc, color, index, array) => {
+            acc[index / (array.length - 1)] = color;
+            return acc;
+          }, {})
+        });
+        canvas.clear();
+        canvas.add(gradientRect);
+        canvas.sendToBack(gradientRect);
+      } else {
+        canvas.setBackgroundColor(color, canvas.renderAll.bind(canvas));
+      }
+    }
+  };
+
+  const handleFileSelect = (e) => {
+    const selectedFile = e.target.files[0];
+    handleFile(selectedFile);
+  };
+
+  const handleFile = (selectedFile) => {
+    if (selectedFile) {
+      const validExtensions = ["image/jpeg", "image/jpg", "image/png"];
+      if (validExtensions.includes(selectedFile.type)) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          fabric.Image.fromURL(e.target.result, (img) => {
+            img.set({
+              left: 0,
+              top: 0,
+              scaleX: canvas.width / img.width,
+              scaleY: canvas.height / img.height,
+            });
+            canvas.clear();
+            canvas.add(img);
+            img.set({ selectable: false }); // Make image non-selectable
+            canvas.sendToBack(img); // Send image to back
+          });
+        };
+        reader.readAsDataURL(selectedFile);
+      } else {
+        alert("This is not an Image File!");
+      }
+    }
+  };
+
+  const gradients = [
+    'linear-gradient(to right, #ff7e5f, #feb47b)',
+    'linear-gradient(to right, #6a11cb, #2575fc)',
+    'linear-gradient(to right, #ff6a00, #ee0979)',
+    'linear-gradient(to right, #00c6ff, #0072ff)',
+    'linear-gradient(to right, #f7971e, #ffd200)',
+    'linear-gradient(to right, #7f00ff, #e100ff)',
+    'linear-gradient(to right, #f953c6, #b91d73)',
+    'linear-gradient(to right, #4e54c8, #8f94fb)',
+    'linear-gradient(to right, #12c2e9, #c471ed, #f64f59)'
+  ];
 
   return (
     <div className="sidebar-container">
@@ -252,14 +383,31 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
               </div>
             </div>
             <div className="form-group">
-              <button className="icon-button" onClick={() => applyStyle('fontWeight', textProperties.fontWeight === 'bold' ? 'normal' : 'bold')}>
+              <button className="icon-button" onClick={() => applyStyle('fontWeight')}>
                 <FontAwesomeIcon icon={faBold} className="icon" />
               </button>
-              <button className="icon-button" onClick={() => applyStyle('fontStyle', textProperties.fontStyle === 'italic' ? 'normal' : 'italic')}>
+              <button className="icon-button" onClick={() => applyStyle('fontStyle')}>
                 <FontAwesomeIcon icon={faItalic} className="icon" />
               </button>
-              <button className="icon-button" onClick={() => applyStyle('textDecoration', textProperties.textDecoration === 'underline' ? 'none' : 'underline')}>
+              <button className="icon-button" onClick={() => applyStyle('textDecoration')}>
                 <FontAwesomeIcon icon={faUnderline} className="icon" />
+              </button>
+            </div>
+            <div className="form-group">
+              <button className="icon-button" onClick={() => handleAlignText('left', canvas)}>
+                <FontAwesomeIcon icon={faAlignLeft} className="icon" />
+              </button>
+              <button className="icon-button" onClick={() => handleAlignText('center', canvas)}>
+                <FontAwesomeIcon icon={faAlignCenter} className="icon" />
+              </button>
+              <button className="icon-button" onClick={() => handleAlignText('right', canvas)}>
+                <FontAwesomeIcon icon={faAlignRight} className="icon" />
+              </button>
+              <button className="icon-button" onClick={() => handleAlignText('top', canvas)}>
+                <FontAwesomeIcon icon={faAlignJustify} className="icon" />
+              </button>
+              <button className="icon-button" onClick={() => handleAlignText('bottom', canvas)}>
+                <FontAwesomeIcon icon={faAlignJustify} className="icon" />
               </button>
             </div>
           </div>
@@ -283,6 +431,62 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
             </div>
           </div>
         )}
+        <div className="sidebar-item" onClick={handleCustomize}>
+          <FontAwesomeIcon icon={faCog} className="sidebar-icon" />
+          <span>Customize</span>
+        </div>
+        {isCustomizeOpen && (
+          <div className="customize-settings-window">
+            <label>
+              Width:
+              <input
+                type="number"
+                value={canvasWidth}
+                onChange={(e) => setCanvasWidth(parseInt(e.target.value))}
+              />
+            </label>
+            <label>
+              Height:
+              <input
+                type="number"
+                value={canvasHeight}
+                onChange={(e) => setCanvasHeight(parseInt(e.target.value))}
+              />
+            </label>
+            <button className="resize-button" onClick={handleResizeCanvas}>Resize Canvas</button>
+            <div className="color-picker">
+              <label>Background color:</label>
+              <div className="color-options">
+                {['#ffffff', '#f0f0f0', '#d3d3d3', '#c0c0c0', '#808080', '#000000', '#ff0000', '#ffa500', '#ffff00', '#008000', '#0000ff'].map(color => (
+                  <div
+                    key={color}
+                    className="color-option"
+                    style={{ backgroundColor: color }}
+                    onClick={() => handleBackgroundColorChange(color)}
+                  />
+                ))}
+                {gradients.map((gradient, index) => (
+                  <div
+                    key={index}
+                    className="color-option"
+                    style={{ background: gradient }}
+                    onClick={() => handleBackgroundColorChange(gradient)}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+        <div className="sidebar-item" onClick={handleUploads}>
+          <FontAwesomeIcon icon={faUpload} className="sidebar-icon" />
+          <span>Uploads</span>
+          <input
+            type="file"
+            ref={fileInputRef}
+            style={{ display: 'none' }}
+            onChange={handleFileSelect}
+          />
+        </div>
       </div>
     </div>
   );
