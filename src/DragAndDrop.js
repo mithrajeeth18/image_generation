@@ -10,8 +10,9 @@ const DragAndDropWithText = ({ textProperties, setCanvas }) => {
     const canvasElement = canvasRef.current;
     const fabricCanvas = new fabric.Canvas(canvasElement, {
       backgroundColor: 'white', // Set canvas background to white
+      //backgroundColor: "#640209",
       width: 700,
-      height: 500
+      height: 500,
     });
     fabricCanvasRef.current = fabricCanvas;
     setCanvas(fabricCanvas); // Set the canvas reference

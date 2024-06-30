@@ -17,23 +17,12 @@ function Header({ canvas }) {
         quality: 1,
       });
 
-      const blob = await (await fetch(dataURL)).blob();
-
-      const opts = {
-        types: [{
-          description: `${selectedFormat.toUpperCase()} Image`,
-          accept: { [`image/${selectedFormat}`]: [`.${selectedFormat}`] },
-        }],
-      };
-
-      try {
-        const handle = await window.showSaveFilePicker(opts);
-        const writableStream = await handle.createWritable();
-        await writableStream.write(blob);
-        await writableStream.close();
-      } catch (err) {
-        console.error('Error saving file:', err);
-      }
+      const link = document.createElement('a');
+      link.href = dataURL;
+      link.download = `canvas_image.${selectedFormat}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   };
 

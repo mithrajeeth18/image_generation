@@ -101,13 +101,19 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
     };
   }, [canvas]);
 
+  
+
+
   const handleSelection = (e) => {
-    const activeObject = e.target;
-    if (activeObject && activeObject.type === 'i-text') {
+    const activeObject = canvas.getActiveObject();
+    console.log("Active Object Selected:", activeObject);
+
+    if (activeObject && activeObject.type === "i-text") {
       setSelectedText(activeObject);
       updateTextProperties(activeObject); // Update the state with the selected text properties
     }
   };
+
 
   const handleDeselection = () => {
     setSelectedText(null);
@@ -125,7 +131,9 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
   };
 
   const addText = () => {
-    if (canvas) {
+    if (canvas)
+    {
+      
       const text = new fabric.IText('Enter text...', {
         left: 100,
         top: 100,
@@ -136,6 +144,7 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
         fontStyle: textProperties.fontStyle,
         textDecoration: textProperties.textDecoration,
       });
+      //console.log(text);
       canvas.add(text);
       canvas.setActiveObject(text);
       setSelectedText(text);
