@@ -72,7 +72,9 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
   const [canvasWidth, setCanvasWidth] = useState(700);
   const [canvasHeight, setCanvasHeight] = useState(500);
   const fileInputRef = useRef(null);
- const [count, setcount] = useState(0);
+  const [count, setcount] = useState(0);
+  const [selectedShape, setSelectedShape] = useState(null);
+  const[addTextDiv, setAddTextDiv] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -89,7 +91,11 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
     }
   };
 
-  const fonts = ["Arial", "Verdana", "Poppins", "Times New Roman", "Courier New", "Lucida Console", "Georgia", "Tahoma", "Impact", "Comic Sans MS"];
+  const fonts = [
+    "Arial", "Verdana", "Poppins", "Times New Roman", "Courier New", 
+    "Lucida Console", "Georgia", "Tahoma", "Impact", "Comic Sans MS",
+    "CustomFont1", "CustomFont2" // Add your custom fonts here
+  ];
 
   useEffect(() => {
     if (canvas) {
@@ -110,10 +116,9 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
   
 
 
-
-  const handleSelection = (e) => {
+const handleSelection = (e) => {
   const activeObject = canvas.getActiveObject();
-  console.log("Active Object Selected:", activeObject);
+  console.log("Active Object Selected:", activeObject.type);
 
   if (activeObject && activeObject.type === "i-text") {
     const selectedTextProperties = {
@@ -124,17 +129,38 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
       left: activeObject.left,
       top: activeObject.top,
     };
-    console.log("Selected Text Properties:", selectedTextProperties);
+    //console.log("Selected Text Properties:", selectedTextProperties);
 
     setSelectedText(activeObject);
-    updateTextProperties(activeObject); // Update the state with the selected text properties
+    updateTextProperties(activeObject);
+    setIsTextSettingsOpen(true);
+    setAddTextDiv(false);// Open text settings panel
+  } else {
+    setSelectedText(null);
+    setIsTextSettingsOpen(false); // Close text settings panel
   }
+
+  if(activeObject && (activeObject.type === "rect" || activeObject.type === "circle" || activeObject.type === "triangle" || activeObject.type === "line" || activeObject.type === "diamond"))
+  {
+    setSelectedShape(activeObject);
+    setIsShapeSettingsOpen(true);
+  }
+  else
+  {
+    setSelectedShape(null);
+    setIsShapeSettingsOpen(false);
+  }
+  
 };
 
 
 
   const handleDeselection = () => {
     setSelectedText(null);
+    setIsTextSettingsOpen(false);
+    setSelectedShape(null);
+    setAddTextDiv(false);
+    setIsShapeSettingsOpen(false);
   };
 
   const updateTextProperties = (textObject) => {
@@ -156,8 +182,8 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
       setcount(count+1);
       let Textid = "TX";
       
-      const text = new fabric.IText('Enter text...', {
-        id: Textid+count,
+      const text = new fabric.IText("Enter text...", {
+        id: Textid + count,
         left: 100,
         top: 100,
         fill: textProperties.color, // Use textProperties.color
@@ -166,9 +192,9 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
         fontWeight: textProperties.fontWeight,
         fontStyle: textProperties.fontStyle,
         textDecoration: textProperties.textDecoration,
-        
-      }
-      );
+        hasControls: false, // Disable resizing controls
+        hasBorders: false,
+      });
       
       //console.log(text);
       canvas.add(text);
@@ -281,15 +307,17 @@ const handleCopy = () => {
 
       // Create a new fabric.js IText object with extracted properties
        clonedObject = new fabric.IText(text, {
-        left: left + 20, // Example: add an offset to position it differently
-        top: top + 20,
-        fontSize,
-        fill,
-        fontFamily,
-        fontWeight,
-        fontStyle,
-        textDecoration,
-      });
+         left: left + 20, // Example: add an offset to position it differently
+         top: top + 20,
+         fontSize,
+         fill,
+         fontFamily,
+         fontWeight,
+         fontStyle,
+         textDecoration,
+         hasControls: false, // Disable resizing controls
+         hasBorders: false,
+       });
 
       // Add the new object to the canvas
      
@@ -346,14 +374,43 @@ const handleCopy = () => {
 
 
 
-  
+  useEffect(() => {
+    const handleCanvasClick = (e) => {
+      const { offsetX, offsetY } = e;
+      const target = canvas.findTarget(e, true);
+      if (!target) {
+        // Clicked on free space in canvas
+        setAddTextDiv(false);
+        setIsCustomizeOpen(false);
+        setIsShapeSettingsOpen(false);
+        setIsTextSettingsOpen(false); // Close text settings panel
+      }
+    };
+
+    if (canvas) {
+      canvas.on("mouse:down", handleCanvasClick);
+    }
+
+    return () => {
+      if (canvas) {
+        canvas.off("mouse:down", handleCanvasClick);
+      }
+    };
+  }, [canvas]);
+
 
   const toggleTextSettings = () => {
-    setIsTextSettingsOpen(!isTextSettingsOpen);
+    /*setIsTextSettingsOpen(!isTextSettingsOpen);
     if (!isTextSettingsOpen) {
       setIsShapeSettingsOpen(false); // Close shape settings if open
-      addText(); // Add text to the canvas when the button is clicked
+      //addText(); // Add text to the canvas when the button is clicked
+    }*/
+    setAddTextDiv(!addTextDiv);
+    if (!addTextDiv) {
+      setAddTextDiv(true); // Close shape settings if open
+      //addText(); // Add text to the canvas when the button is clicked
     }
+
   };
 
   const toggleShapeSettings = () => {
@@ -466,8 +523,15 @@ const handleCopy = () => {
           <FontAwesomeIcon icon={faTextWidth} className="sidebar-icon" />
           <span>Text</span>
         </div>
+      {addTextDiv && (<div className="text-settings-window">
+             <button className="icon-button" onClick={addText}>
+               Add text
+             </button>
+          </div>
+        )}
         {isTextSettingsOpen && (
           <div className="text-settings-window">
+            
             <label>
               Font:
               <select
