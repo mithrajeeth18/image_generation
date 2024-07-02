@@ -286,69 +286,39 @@ const handleSelection = (e) => {
       canvas.renderAll();
     }
   };
-let clonedObject=null;
+let clonedObject = null;
+
 const handleCopy = () => {
-  console.log("Copying object...");
   if (canvas) {
     const activeObject = canvas.getActiveObject();
-    if (activeObject && activeObject.type === "i-text") {
-      // Extract properties from the active object
-      const {
-        text,
-        left,
-        top,
-        fontSize,
-        fill,
-        fontFamily,
-        fontWeight,
-        fontStyle,
-        textDecoration,
-      } = activeObject;
-
-      // Create a new fabric.js IText object with extracted properties
-       clonedObject = new fabric.IText(text, {
-         left: left + 20, // Example: add an offset to position it differently
-         top: top + 20,
-         fontSize,
-         fill,
-         fontFamily,
-         fontWeight,
-         fontStyle,
-         textDecoration,
-         hasControls: false, // Disable resizing controls
-         hasBorders: false,
-       });
-
-      // Add the new object to the canvas
-     
-    } else {
-      console.log("No active text object to copy.");
+    if (activeObject) {
+      clonedObject = fabric.util.object.clone(activeObject); // Clone the active object
+      clonedObject.set({
+        left: activeObject.left + 10,
+        top: activeObject.top + 10,
+      });
     }
   }
 };
 
 
+const handlePaste = () => {
+  if (canvas && clonedObject)
+  {
+    
+    const clonedInstance = fabric.util.object.clone(clonedObject); // Create a new instance of the cloned object
+    canvas.add(clonedInstance);
+    canvas.setActiveObject(clonedInstance);
+    canvas.renderAll();
+    
+  }
+};
 
- const handlePaste = () => {
-   console.log("Pasting object...");
-   if (canvas && clonedObject) {
-     const activeObject = canvas.getActiveObject();
-     if (activeObject) {
-       clonedObject.set({
-         left: activeObject.left + 10,
-         top: activeObject.top + 10,
-       });
-       canvas.add(clonedObject);
-       canvas.setActiveObject(clonedObject);
-       canvas.renderAll();
-     }
-   }
- };
 
 
  useEffect(() => {
    const handleKeyDown = (e) => {
-     if (selectedText) {
+     if (selectedText || selectedShape) {
        if (e.metaKey || e.ctrlKey) {
          switch (e.key.toLowerCase()) {
            case "c":
@@ -400,31 +370,31 @@ const handleCopy = () => {
 
 
   const toggleTextSettings = () => {
-    /*setIsTextSettingsOpen(!isTextSettingsOpen);
-    if (!isTextSettingsOpen) {
-      setIsShapeSettingsOpen(false); // Close shape settings if open
-      //addText(); // Add text to the canvas when the button is clicked
-    }*/
     setAddTextDiv(!addTextDiv);
+    setIsShapeSettingsOpen(false);
+    setIsCustomizeOpen(false);
     if (!addTextDiv) {
-      setAddTextDiv(true); // Close shape settings if open
-      //addText(); // Add text to the canvas when the button is clicked
+      setAddTextDiv(true);
     }
-
   };
 
   const toggleShapeSettings = () => {
     setIsShapeSettingsOpen(!isShapeSettingsOpen);
+    setAddTextDiv(false);
+    setIsCustomizeOpen(false);
+    setIsTextSettingsOpen(false);
     if (!isShapeSettingsOpen) {
-      setIsTextSettingsOpen(false); // Close text settings if open
+      setIsShapeSettingsOpen(true);
     }
   };
 
   const handleCustomize = () => {
     setIsCustomizeOpen(!isCustomizeOpen);
+    setAddTextDiv(false);
+    setIsShapeSettingsOpen(false);
+    setIsTextSettingsOpen(false);
     if (!isCustomizeOpen) {
-      setIsTextSettingsOpen(false); // Close other panels if open
-      setIsShapeSettingsOpen(false);
+      setIsCustomizeOpen(true);
     }
   };
 
