@@ -34,6 +34,10 @@ const ShapeIcon = ({ shape, onClick }) => (
   </div>
 );
 
+
+
+
+
 const handleAlignText = (alignment, canvas) => {
   const activeObject = canvas.getActiveObject();
   if (activeObject && activeObject.type === 'i-text') {
@@ -68,6 +72,7 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
   const [canvasWidth, setCanvasWidth] = useState(700);
   const [canvasHeight, setCanvasHeight] = useState(500);
   const fileInputRef = useRef(null);
+ const [count, setcount] = useState(0);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -101,18 +106,31 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
     };
   }, [canvas]);
 
+
   
 
 
-  const handleSelection = (e) => {
-    const activeObject = canvas.getActiveObject();
-    console.log("Active Object Selected:", activeObject);
 
-    if (activeObject && activeObject.type === "i-text") {
-      setSelectedText(activeObject);
-      updateTextProperties(activeObject); // Update the state with the selected text properties
-    }
-  };
+  const handleSelection = (e) => {
+  const activeObject = canvas.getActiveObject();
+  console.log("Active Object Selected:", activeObject);
+
+  if (activeObject && activeObject.type === "i-text") {
+    const selectedTextProperties = {
+      id: activeObject.id,
+      text: activeObject.text,
+      fontSize: activeObject.fontSize,
+      fill: activeObject.fill,
+      left: activeObject.left,
+      top: activeObject.top,
+    };
+    console.log("Selected Text Properties:", selectedTextProperties);
+
+    setSelectedText(activeObject);
+    updateTextProperties(activeObject); // Update the state with the selected text properties
+  }
+};
+
 
 
   const handleDeselection = () => {
@@ -130,11 +148,16 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
     });
   };
 
-  const addText = () => {
+  const addText = () =>
+  {
+    
     if (canvas)
     {
+      setcount(count+1);
+      let Textid = "TX";
       
       const text = new fabric.IText('Enter text...', {
+        id: Textid+count,
         left: 100,
         top: 100,
         fill: textProperties.color, // Use textProperties.color
@@ -143,7 +166,10 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
         fontWeight: textProperties.fontWeight,
         fontStyle: textProperties.fontStyle,
         textDecoration: textProperties.textDecoration,
-      });
+        
+      }
+      );
+      
       //console.log(text);
       canvas.add(text);
       canvas.setActiveObject(text);
@@ -234,6 +260,93 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
       canvas.renderAll();
     }
   };
+let clonedObject=null;
+const handleCopy = () => {
+  console.log("Copying object...");
+  if (canvas) {
+    const activeObject = canvas.getActiveObject();
+    if (activeObject && activeObject.type === "i-text") {
+      // Extract properties from the active object
+      const {
+        text,
+        left,
+        top,
+        fontSize,
+        fill,
+        fontFamily,
+        fontWeight,
+        fontStyle,
+        textDecoration,
+      } = activeObject;
+
+      // Create a new fabric.js IText object with extracted properties
+       clonedObject = new fabric.IText(text, {
+        left: left + 20, // Example: add an offset to position it differently
+        top: top + 20,
+        fontSize,
+        fill,
+        fontFamily,
+        fontWeight,
+        fontStyle,
+        textDecoration,
+      });
+
+      // Add the new object to the canvas
+     
+    } else {
+      console.log("No active text object to copy.");
+    }
+  }
+};
+
+
+
+ const handlePaste = () => {
+   console.log("Pasting object...");
+   if (canvas && clonedObject) {
+     const activeObject = canvas.getActiveObject();
+     if (activeObject) {
+       clonedObject.set({
+         left: activeObject.left + 10,
+         top: activeObject.top + 10,
+       });
+       canvas.add(clonedObject);
+       canvas.setActiveObject(clonedObject);
+       canvas.renderAll();
+     }
+   }
+ };
+
+
+ useEffect(() => {
+   const handleKeyDown = (e) => {
+     if (selectedText) {
+       if (e.metaKey || e.ctrlKey) {
+         switch (e.key.toLowerCase()) {
+           case "c":
+             e.preventDefault(); // Prevent default copy behavior
+             handleCopy();
+             break;
+           case "v":
+             e.preventDefault(); // Prevent default paste behavior
+             handlePaste();
+             break;
+           default:
+             break;
+         }
+       }
+     }
+   };
+
+   document.addEventListener("keydown", handleKeyDown);
+   return () => {
+     document.removeEventListener("keydown", handleKeyDown);
+   };
+ }, [selectedText, handleCopy, handlePaste]);
+
+
+
+  
 
   const toggleTextSettings = () => {
     setIsTextSettingsOpen(!isTextSettingsOpen);
