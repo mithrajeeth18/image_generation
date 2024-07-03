@@ -39,23 +39,24 @@ const ShapeIcon = ({ shape, onClick }) => (
 
 
 const handleAlignText = (alignment, canvas) => {
+  const paddingValue = 30; 
   const activeObject = canvas.getActiveObject();
   if (activeObject && activeObject.type === 'i-text') {
     switch (alignment) {
       case 'left':
-        activeObject.set({ left: 0 });
+        activeObject.set({ left: paddingValue });
         break;
       case 'center':
-        activeObject.set({ left: canvas.width / 2 - activeObject.width / 2 });
+        activeObject.set({ left: canvas.width / 2 - activeObject.width / 2 + paddingValue });
         break;
       case 'right':
-        activeObject.set({ left: canvas.width - activeObject.width });
+        activeObject.set({ left: canvas.width - activeObject.width - paddingValue });
         break;
       case 'top':
-        activeObject.set({ top: 0 });
+        activeObject.set({ top: paddingValue });
         break;
       case 'bottom':
-        activeObject.set({ top: canvas.height - activeObject.height });
+        activeObject.set({ top: canvas.height - activeObject.height - paddingValue });
         break;
       default:
         break;
