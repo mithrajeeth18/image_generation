@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { SketchPicker } from "react-color";
 import './Sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBold, faItalic, faUnderline, faShapes, faTextWidth, faAlignLeft, faAlignRight, faAlignCenter, faAlignJustify, faCog, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { fabric } from 'fabric';
+import ColorPicker from './ColorPicker';
 
 const ShapeIcon = ({ shape, onClick }) => (
   <div className="shape-button" onClick={onClick}>
@@ -456,11 +458,17 @@ const handlePaste = () => {
         const reader = new FileReader();
         reader.onload = (e) => {
           fabric.Image.fromURL(e.target.result, (img) => {
+            const imgWidth = img.width;
+            const imgHeight = img.height;
+            
+            canvas.setWidth(imgWidth);
+            canvas.setHeight(imgHeight);
+            
             img.set({
               left: 0,
               top: 0,
-              scaleX: canvas.width / img.width,
-              scaleY: canvas.height / img.height,
+              scaleX: 1,
+              scaleY: 1,
             });
             canvas.clear();
             canvas.add(img);
@@ -613,7 +621,8 @@ const handlePaste = () => {
             <button className="resize-button" onClick={handleResizeCanvas}>Resize Canvas</button>
             <div className="color-picker">
               <label>Background color:</label>
-              <div className="color-options">
+              <ColorPicker onColorChange={handleBackgroundColorChange} />
+              {/* <div className="color-options">
                 {['#ffffff', '#f0f0f0', '#d3d3d3', '#c0c0c0', '#808080', '#000000', '#ff0000', '#ffa500', '#ffff00', '#008000', '#0000ff'].map(color => (
                   <div
                     key={color}
@@ -630,7 +639,7 @@ const handlePaste = () => {
                     onClick={() => handleBackgroundColorChange(gradient)}
                   />
                 ))}
-              </div>
+              </div> */}
             </div>
           </div>
         )}
