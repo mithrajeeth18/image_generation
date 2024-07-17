@@ -1,0 +1,393 @@
+.sidebar-container {
+  display: flex;
+  flex-direction: column;
+  width: 80px;
+  background-color: #ffffff; /* White sidebar background */
+  height: 100vh;
+  padding-top: 20px;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.customize-text{
+  font-family:  Arial, Helvetica, sans-serif;
+}
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.sidebar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #2c3e50;
+  cursor: pointer;
+  transition: color 0.3s, background-color 0.3s;
+  width: 100%;
+  padding: 10px 0;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.sidebar-item:hover {
+  color: #3498db;
+  background-color: #f0f0f0;
+}
+
+.sidebar-icon {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.sidebar-item span {
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.text-settings-window {
+  background-color: #f8f9fa; /* Light grey background */
+  border-radius: 12px; /* Rounded corners */
+  padding: 20px; /* More padding for a cleaner look */
+  width: 250px; /* Adjusted width */
+  position: absolute;
+  left: 80px;
+  top: 80px; /* Adjusted position */
+  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Clean font */
+}
+
+/* Add text button */
+.text-settings-window button.icon-button.add-text-button {
+  background-color: #007bff; /* Primary blue background */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  font-size: 16px; /* Larger font size for the Add text button */
+}
+
+.text-settings-window button.icon-button.add-text-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Labels and Inputs */
+.text-settings-window label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.text-settings-window select,
+.text-settings-window input[type="number"],
+.text-settings-window input[type="color"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ced4da; /* Light border */
+  border-radius: 8px;
+  background-color: white;
+  font-size: 14px;
+  color: #495057;
+  transition: border-color 0.3s ease;
+}
+
+.text-settings-window select:focus,
+.text-settings-window input[type="number"]:focus,
+.text-settings-window input[type="color"]:focus {
+  border-color: #80bdff; /* Blue border on focus */
+  outline: none;
+}
+
+/* Style buttons */
+.text-settings-window .form-group {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap; /* Ensure buttons stay on the same row */
+  margin-bottom: 15px;
+}
+
+.text-settings-window .icon-button {
+  background-color: #e9ecef; /* Light background */
+  color: #495057; /* Darker text */
+  border: none;
+  border-radius: 8px;
+  padding: 4px; /* Smaller padding */
+  font-size: 10px; /* Smaller font size */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  flex: 1 1 auto; /* Ensure buttons take up auto width */
+  margin: 2px; /* Margin for spacing between buttons */
+}
+
+.text-settings-window .icon-button:hover {
+  background-color: #ced4da; /* Darker background on hover */
+}
+
+.text-settings-window .icon {
+  font-size: 12px; /* Smaller icon size */
+}
+
+.text-settings-window .form-group.single-row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  margin-bottom: 15px;
+}
+
+.text-settings-window .form-group.single-row .icon-button {
+  flex: 1; /* Ensure buttons take up equal width */
+}
+
+
+/* Shape settings window */
+.shape-settings-window {
+  background-color: #f8f9fa; /* Light grey background */
+  border-radius: 12px; /* Rounded corners */
+  padding: 20px; /* More padding for a cleaner look */
+  width: 250px; /* Adjusted width */
+  position: absolute;
+  left: 80px;
+  top: 190px; /* Adjusted position */
+  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Clean font */
+}
+
+.shape-settings-window .shape-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.shape-settings-window .shape-button {
+  background-color: #2c3e50; /* Dark background for shape buttons */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 48%; /* Ensure buttons take up 48% of the container width */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.shape-settings-window .shape-button:hover {
+  background-color: #34495e; /* Darker background on hover */
+}
+
+.shape-settings-window .shape-button svg {
+  fill: white;
+  width: 100%;
+  height: auto;
+}
+
+
+/* Customize settings window */
+.customize-settings-window {
+  background-color: #f8f9fa; /* Light grey background */
+  border-radius: 12px; /* Rounded corners */
+  padding: 20px; /* More padding for a cleaner look */
+  width: 250px; /* Adjusted width */
+  position: absolute;
+  left: 80px;
+  top: 280px; /* Adjusted position */
+  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Clean font */
+}
+
+.customize-settings-window label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.customize-settings-window input[type="number"],
+.customize-settings-window input[type="color"],
+.customize-settings-window input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ced4da; /* Light border */
+  border-radius: 8px;
+  background-color: white;
+  font-size: 14px;
+  color: #495057;
+  transition: border-color 0.3s ease;
+}
+
+.customize-settings-window input[type="number"]:focus,
+.customize-settings-window input[type="color"]:focus,
+.customize-settings-window input[type="text"]:focus {
+  border-color: #80bdff; /* Blue border on focus */
+  outline: none;
+}
+
+.customize-settings-window .resize-button,
+.customize-settings-window .apply-button {
+  background-color: #007bff; /* Primary blue background */
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  width: 100%; /* Full width buttons */
+  margin-bottom: 10px; /* Margin below each button */
+}
+
+.customize-settings-window .resize-button:hover,
+.customize-settings-window .apply-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+
+/* .resize-button {
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #3498db;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.resize-button:hover {
+  background-color: #2980b9;
+}
+
+.color-picker {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  
+}
+
+.color-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.color-option {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.color-option:hover {
+  border: 2px solid #000;
+} */
+
+.gradient-options {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.gradient-option {
+  width: 40px;
+  height: 40px;
+  margin: 5px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
+}
+
+.gradient-option:hover {
+  border-color: #000;
+}
+
+/* Backgrounds panel */
+.backgrounds-panel {
+  background-color: #f8f9fa; /* Light grey background */
+  border-radius: 12px; /* Rounded corners */
+  padding: 20px; /* More padding for a cleaner look */
+  width: 250px; /* Adjusted width */
+  position: absolute;
+  left: 85px;
+  top: 70px; /* Adjusted position */
+  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Clean font */
+}
+
+.backgrounds-panel .background-item {
+  margin-bottom: 15px; /* Spacing between backgrounds */
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.backgrounds-panel .background-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.backgrounds-panel .background-item img {
+  width: 100%; /* Full width */
+  height: auto;
+  border-radius: 12px;
+}
+
+
+/* Logos panel */
+.logos-panel {
+  background-color: #f8f9fa; /* Light grey background */
+  border-radius: 12px; /* Rounded corners */
+  padding: 20px; /* More padding for a cleaner look */
+  width: 250px; /* Adjusted width */
+  position: absolute;
+  left: 85px;
+  top: 70px; /* Adjusted position */
+  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Clean font */
+}
+
+.logos-panel .logo-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px; /* Spacing between logos */
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.logos-panel .logo-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logos-panel .logo-item img {
+  width: 40px; /* Uniform logo size */
+  height: 40px;
+  margin-right: 10px;
+  border-radius: 8px;
+}
+
+.logos-panel .logo-item span {
+  font-size: 14px;
+  color: #333;
+}
+
