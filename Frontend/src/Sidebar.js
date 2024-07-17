@@ -10,7 +10,7 @@ import BackgroundsPanel from './BackgroundsPanel';
 
 import logo1 from './logos/JioCinema.png';
 import logo2 from './logos/JioFiber.png';
-import logo3 from './logos/JioMart.jpg';
+import logo3 from './logos/JioMart.png';
 import logo4 from './logos/JioSaavn.png';
 import logo5 from './logos/JioTv.png';
 import logo6 from './logos/JioChat.png';
@@ -18,8 +18,8 @@ import logo7 from './logos/JioCloud.png';
 import logo8 from './logos/JioMags.png';
 import logo9 from './logos/JioMoney.jpeg';
 import logo10 from './logos/JioNet.png';
-import logo11 from './logos/JioNewspaper.jpeg';
-import logo12 from './logos/JioSecurity.jpeg';
+import logo11 from './logos/JioNewspaper.png';
+import logo12 from './logos/JioSecurity.png';
 import logo13 from './logos/IMG_3193.PNG';
 
 import background1 from './backgrounds/image1.png';
@@ -376,7 +376,7 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
               handleCopy();
               break;
             case "v":
-              e.preventDefault();
+              //e.preventDefault();
               handlePaste();
               break;
             default:
