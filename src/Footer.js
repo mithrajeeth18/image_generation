@@ -1,6 +1,6 @@
 import React from 'react';
 import './Footer.css';
-import logo from './logoJio.svg.png'; // Update the path as per your structure
+import logo from './logos/logoJio.svg.png'; // Update the path as per your structure
 
 const Footer = () => {
   return (

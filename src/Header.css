@@ -1,7 +1,7 @@
 /* Header.css */
 
 .navbar {
-  padding: 0.75rem;
+  padding: 0.5rem;
   background-color: #0f3cc9;
 }
 
@@ -22,7 +22,7 @@
 }
 
 .navbar-logo {
-  height: 30px; /* Adjust as needed */
+  height: 50px; /* Adjust as needed */
   margin-right: 10px;
   margin-left: 10px;
 }

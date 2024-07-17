@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Header.css';
-import logo from './logoJio.svg.png'; // Make sure you have a logo image in your src folder
+import logo from './logos/logoJio.svg.png'; // Make sure you have a logo image in your src folder
 
 function Header({ canvas }) {
   const [dropdownVisible, setDropdownVisible] = useState(false); // State to manage dropdown visibility

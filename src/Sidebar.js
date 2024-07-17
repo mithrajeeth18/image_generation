@@ -2,9 +2,34 @@ import React, { useState, useEffect, useRef } from 'react';
 import { SketchPicker } from "react-color";
 import './Sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBold, faItalic, faUnderline, faShapes, faTextWidth, faAlignLeft, faAlignRight, faAlignCenter, faAlignJustify, faCog, faUpload } from '@fortawesome/free-solid-svg-icons';
+import { faBold, faItalic, faUnderline, faShapes, faTextWidth, faAlignLeft, faAlignRight, faAlignCenter, faAlignJustify, faCog, faUpload, faImages, faImage } from '@fortawesome/free-solid-svg-icons';
 import { fabric } from 'fabric';
 import ColorPicker from './ColorPicker';
+import LogosPanel from './LogosPanel'; 
+import BackgroundsPanel from './BackgroundsPanel';
+
+import logo1 from './logos/JioCinema.png';
+import logo2 from './logos/JioFiber.png';
+import logo3 from './logos/JioMart.jpg';
+import logo4 from './logos/JioSaavn.png';
+import logo5 from './logos/JioTv.png';
+import logo6 from './logos/JioChat.png';
+import logo7 from './logos/JioCloud.png';
+import logo8 from './logos/JioMags.png';
+import logo9 from './logos/JioMoney.jpeg';
+import logo10 from './logos/JioNet.png';
+import logo11 from './logos/JioNewspaper.jpeg';
+import logo12 from './logos/JioSecurity.jpeg';
+import logo13 from './logos/IMG_3193.PNG';
+
+import background1 from './backgrounds/image1.png';
+import background2 from './backgrounds/image2.png';
+import background3 from './backgrounds/image3.jpeg';
+import background4 from './backgrounds/image4.jpeg';
+import background5 from './backgrounds/image5.jpeg';
+import background6 from './backgrounds/image6.jpeg';
+import background7 from './backgrounds/image7.jpeg';
+import background8 from './backgrounds/image8.png';
 
 const ShapeIcon = ({ shape, onClick }) => (
   <div className="shape-button" onClick={onClick}>
@@ -36,10 +61,6 @@ const ShapeIcon = ({ shape, onClick }) => (
   </div>
 );
 
-
-
-
-
 const handleAlignText = (alignment, canvas) => {
   const paddingValue = 30; 
   const activeObject = canvas.getActiveObject();
@@ -68,16 +89,67 @@ const handleAlignText = (alignment, canvas) => {
 };
 
 function Sidebar({ textProperties, setTextProperties, canvas }) {
-  const [isTextSettingsOpen, setIsTextSettingsOpen] = useState(false);
-  const [isShapeSettingsOpen, setIsShapeSettingsOpen] = useState(false);
-  const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
+  const [activePanel, setActivePanel] = useState(null);
   const [selectedText, setSelectedText] = useState(null);
   const [canvasWidth, setCanvasWidth] = useState(700);
   const [canvasHeight, setCanvasHeight] = useState(500);
   const fileInputRef = useRef(null);
-  const [count, setcount] = useState(0);
+  const [count, setCount] = useState(0);
   const [selectedShape, setSelectedShape] = useState(null);
-  const[addTextDiv, setAddTextDiv] = useState(false);
+  const logos = [logo1, logo2, logo3, logo4, logo5, logo6, logo7, logo8, logo9, logo10, logo11, logo12, logo13];
+  const backgrounds = [background1, background2 , background3, background4, background5, background6, background7, background8];
+
+  const handleSelectLogo = (logo) => {
+    if (canvas) {
+      fabric.Image.fromURL(logo, (img) => {
+        img.set({
+          left: 100,
+          top: 100,
+          scaleX: 0.5,
+          scaleY: 0.5,
+          selectable: true,
+          hasControls: true,
+          hasBorders: true,
+        });
+        canvas.add(img);
+        canvas.setActiveObject(img);
+        canvas.renderAll();
+      });
+    }
+  };
+
+  const handleSelectBackground = (background) => {
+    if (canvas) {
+      fabric.Image.fromURL(background, (img) => {
+        const imgWidth = img.width;
+        const imgHeight = img.height;
+
+        // Set initial scale factors based on canvas size
+        const scaleX = canvas.width / imgWidth;
+        const scaleY = canvas.height / imgHeight;
+
+        // Set the background image with initial scaling
+        img.set({
+          left: 0,
+          top: 0,
+          scaleX: scaleX,
+          scaleY: scaleY,
+          selectable: false,
+          hasControls: false,
+          hasBorders: false,
+        });
+
+        // Store original dimensions in canvas
+        canvas.originalBackgroundImageWidth = imgWidth;
+        canvas.originalBackgroundImageHeight = imgHeight;
+
+        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+
+        // Close the backgrounds panel after selection
+        setActivePanel(null);
+      });
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -115,55 +187,41 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
     };
   }, [canvas]);
 
+  const handleSelection = (e) => {
+    const activeObject = canvas.getActiveObject();
+    console.log("Active Object Selected:", activeObject.type);
 
-  
+    if (activeObject && activeObject.type === "i-text") {
+      const selectedTextProperties = {
+        id: activeObject.id,
+        text: activeObject.text,
+        fontSize: activeObject.fontSize,
+        fill: activeObject.fill,
+        left: activeObject.left,
+        top: activeObject.top,
+      };
 
+      setSelectedText(activeObject);
+      updateTextProperties(activeObject);
+      setActivePanel('text');
+    } else {
+      setSelectedText(null);
+      setActivePanel(null);
+    }
 
-const handleSelection = (e) => {
-  const activeObject = canvas.getActiveObject();
-  console.log("Active Object Selected:", activeObject.type);
-
-  if (activeObject && activeObject.type === "i-text") {
-    const selectedTextProperties = {
-      id: activeObject.id,
-      text: activeObject.text,
-      fontSize: activeObject.fontSize,
-      fill: activeObject.fill,
-      left: activeObject.left,
-      top: activeObject.top,
-    };
-    //console.log("Selected Text Properties:", selectedTextProperties);
-
-    setSelectedText(activeObject);
-    updateTextProperties(activeObject);
-    setIsTextSettingsOpen(true);
-    setAddTextDiv(false);// Open text settings panel
-  } else {
-    setSelectedText(null);
-    setIsTextSettingsOpen(false); // Close text settings panel
-  }
-
-  if(activeObject && (activeObject.type === "rect" || activeObject.type === "circle" || activeObject.type === "triangle" || activeObject.type === "line" || activeObject.type === "diamond"))
-  {
-    setSelectedShape(activeObject);
-    setIsShapeSettingsOpen(true);
-  }
-  else
-  {
-    setSelectedShape(null);
-    setIsShapeSettingsOpen(false);
-  }
-  
-};
-
-
+    if(activeObject && (activeObject.type === "rect" || activeObject.type === "circle" || activeObject.type === "triangle" || activeObject.type === "line" || activeObject.type === "diamond")) {
+      setSelectedShape(activeObject);
+      setActivePanel('shape');
+    } else {
+      setSelectedShape(null);
+      setActivePanel(null);
+    }
+  };
 
   const handleDeselection = () => {
     setSelectedText(null);
-    setIsTextSettingsOpen(false);
+    setActivePanel(null);
     setSelectedShape(null);
-    setAddTextDiv(false);
-    setIsShapeSettingsOpen(false);
   };
 
   const updateTextProperties = (textObject) => {
@@ -177,29 +235,23 @@ const handleSelection = (e) => {
     });
   };
 
-  const addText = () =>
-  {
-    
-    if (canvas)
-    {
-      setcount(count+1);
+  const addText = () => {
+    if (canvas) {
+      setCount(count+1);
       let Textid = "TX";
-      
       const text = new fabric.IText("Enter text...", {
         id: Textid + count,
         left: 100,
         top: 100,
-        fill: textProperties.color, // Use textProperties.color
+        fill: textProperties.color,
         fontSize: textProperties.fontSize,
         fontFamily: textProperties.fontFamily,
         fontWeight: textProperties.fontWeight,
         fontStyle: textProperties.fontStyle,
         textDecoration: textProperties.textDecoration,
-        hasControls: false, // Disable resizing controls
+        hasControls: false,
         hasBorders: false,
       });
-      
-      //console.log(text);
       canvas.add(text);
       canvas.setActiveObject(text);
       setSelectedText(text);
@@ -289,74 +341,63 @@ const handleSelection = (e) => {
       canvas.renderAll();
     }
   };
-let clonedObject = null;
 
-const handleCopy = () => {
-  if (canvas) {
-    const activeObject = canvas.getActiveObject();
-    if (activeObject) {
-      clonedObject = fabric.util.object.clone(activeObject); // Clone the active object
-      clonedObject.set({
-        left: activeObject.left + 10,
-        top: activeObject.top + 10,
-      });
+  let clonedObject = null;
+
+  const handleCopy = () => {
+    if (canvas) {
+      const activeObject = canvas.getActiveObject();
+      if (activeObject) {
+        clonedObject = fabric.util.object.clone(activeObject);
+        clonedObject.set({
+          left: activeObject.left + 10,
+          top: activeObject.top + 10,
+        });
+      }
     }
-  }
-};
+  };
 
+  const handlePaste = () => {
+    if (canvas && clonedObject) {
+      const clonedInstance = fabric.util.object.clone(clonedObject);
+      canvas.add(clonedInstance);
+      canvas.setActiveObject(clonedInstance);
+      canvas.renderAll();
+    }
+  };
 
-const handlePaste = () => {
-  if (canvas && clonedObject)
-  {
-    
-    const clonedInstance = fabric.util.object.clone(clonedObject); // Create a new instance of the cloned object
-    canvas.add(clonedInstance);
-    canvas.setActiveObject(clonedInstance);
-    canvas.renderAll();
-    
-  }
-};
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (selectedText || selectedShape) {
+        if (e.metaKey || e.ctrlKey) {
+          switch (e.key.toLowerCase()) {
+            case "c":
+              e.preventDefault();
+              handleCopy();
+              break;
+            case "v":
+              e.preventDefault();
+              handlePaste();
+              break;
+            default:
+              break;
+          }
+        }
+      }
+    };
 
-
-
- useEffect(() => {
-   const handleKeyDown = (e) => {
-     if (selectedText || selectedShape) {
-       if (e.metaKey || e.ctrlKey) {
-         switch (e.key.toLowerCase()) {
-           case "c":
-             e.preventDefault(); // Prevent default copy behavior
-             handleCopy();
-             break;
-           case "v":
-             e.preventDefault(); // Prevent default paste behavior
-             handlePaste();
-             break;
-           default:
-             break;
-         }
-       }
-     }
-   };
-
-   document.addEventListener("keydown", handleKeyDown);
-   return () => {
-     document.removeEventListener("keydown", handleKeyDown);
-   };
- }, [selectedText, handleCopy, handlePaste]);
-
-
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedText, handleCopy, handlePaste]);
 
   useEffect(() => {
     const handleCanvasClick = (e) => {
       const { offsetX, offsetY } = e;
       const target = canvas.findTarget(e, true);
       if (!target) {
-        // Clicked on free space in canvas
-        setAddTextDiv(false);
-        setIsCustomizeOpen(false);
-        setIsShapeSettingsOpen(false);
-        setIsTextSettingsOpen(false); // Close text settings panel
+        setActivePanel(null);
       }
     };
 
@@ -371,34 +412,24 @@ const handlePaste = () => {
     };
   }, [canvas]);
 
-
   const toggleTextSettings = () => {
-    setAddTextDiv(!addTextDiv);
-    setIsShapeSettingsOpen(false);
-    setIsCustomizeOpen(false);
-    if (!addTextDiv) {
-      setAddTextDiv(true);
-    }
+    setActivePanel(activePanel === 'text' ? null : 'text');
   };
 
   const toggleShapeSettings = () => {
-    setIsShapeSettingsOpen(!isShapeSettingsOpen);
-    setAddTextDiv(false);
-    setIsCustomizeOpen(false);
-    setIsTextSettingsOpen(false);
-    if (!isShapeSettingsOpen) {
-      setIsShapeSettingsOpen(true);
-    }
+    setActivePanel(activePanel === 'shape' ? null : 'shape');
   };
 
   const handleCustomize = () => {
-    setIsCustomizeOpen(!isCustomizeOpen);
-    setAddTextDiv(false);
-    setIsShapeSettingsOpen(false);
-    setIsTextSettingsOpen(false);
-    if (!isCustomizeOpen) {
-      setIsCustomizeOpen(true);
-    }
+    setActivePanel(activePanel === 'customize' ? null : 'customize');
+  };
+
+  const toggleLogosPanel = () => {
+    setActivePanel(activePanel === 'logos' ? null : 'logos');
+  };
+
+  const toggleBackgroundsPanel = () => {
+    setActivePanel(activePanel === 'backgrounds' ? null : 'backgrounds');
   };
 
   const handleUploads = () => {
@@ -409,9 +440,28 @@ const handlePaste = () => {
 
   const handleResizeCanvas = () => {
     if (canvas) {
-      canvas.setWidth(canvasWidth);
-      canvas.setHeight(canvasHeight);
-      canvas.renderAll();
+      const newWidth = canvasWidth;
+      const newHeight = canvasHeight;
+
+      // Set new canvas dimensions
+      canvas.setWidth(newWidth);
+      canvas.setHeight(newHeight);
+
+      // Get the background image from canvas
+      const backgroundImage = canvas.backgroundImage;
+      if (backgroundImage) {
+        // Calculate new scale factors based on new canvas size
+        const scaleX = newWidth / canvas.originalBackgroundImageWidth;
+        const scaleY = newHeight / canvas.originalBackgroundImageHeight;
+
+        // Apply the new scale to the background image
+        backgroundImage.set({
+          scaleX: scaleX,
+          scaleY: scaleY,
+        });
+
+        canvas.renderAll();
+      }
     }
   };
 
@@ -440,6 +490,7 @@ const handlePaste = () => {
         canvas.clear();
         canvas.add(gradientRect);
         canvas.sendToBack(gradientRect);
+        canvas.renderAll();
       } else {
         canvas.setBackgroundColor(color, canvas.renderAll.bind(canvas));
       }
@@ -447,8 +498,14 @@ const handlePaste = () => {
   };
 
   const handleFileSelect = (e) => {
-    const selectedFile = e.target.files[0];
-    handleFile(selectedFile);
+    const files = e.target.files;
+    handleFiles(files);
+  };
+
+  const handleFiles = (files) => {
+    Array.from(files).forEach(file => {
+      handleFile(file);
+    });
   };
 
   const handleFile = (selectedFile) => {
@@ -458,22 +515,18 @@ const handlePaste = () => {
         const reader = new FileReader();
         reader.onload = (e) => {
           fabric.Image.fromURL(e.target.result, (img) => {
-            const imgWidth = img.width;
-            const imgHeight = img.height;
-            
-            canvas.setWidth(imgWidth);
-            canvas.setHeight(imgHeight);
-            
             img.set({
-              left: 0,
-              top: 0,
-              scaleX: 1,
-              scaleY: 1,
+              left: 100,
+              top: 100,
+              scaleX: 0.5,
+              scaleY: 0.5,
+              selectable: true,
+              hasControls: true,
+              hasBorders: true,
             });
-            canvas.clear();
             canvas.add(img);
-            img.set({ selectable: false }); // Make image non-selectable
-            canvas.sendToBack(img); // Send image to back
+            canvas.setActiveObject(img);
+            canvas.renderAll();
           });
         };
         reader.readAsDataURL(selectedFile);
@@ -495,6 +548,10 @@ const handlePaste = () => {
     'linear-gradient(to right, #12c2e9, #c471ed, #f64f59)'
   ];
 
+  const handleGradientSelection = (gradient) => {
+    handleBackgroundColorChange(gradient);
+  };
+
   return (
     <div className="sidebar-container">
       <div className="sidebar">
@@ -502,86 +559,83 @@ const handlePaste = () => {
           <FontAwesomeIcon icon={faTextWidth} className="sidebar-icon" />
           <span>Text</span>
         </div>
-      {addTextDiv && (<div className="text-settings-window">
-             <button className="icon-button" onClick={addText}>
-               Add text
-             </button>
-          </div>
-        )}
-        {isTextSettingsOpen && (
-          <div className="text-settings-window">
-            
-            <label>
-              Font:
-              <select
-                name="fontFamily"
-                value={textProperties.fontFamily}
-                onChange={handleChange}
-              >
-                {fonts.map(font => (
-                  <option key={font} value={font}>{font}</option>
-                ))}
-              </select>
-            </label>
-            <div className="form-group">
-              <div className="font-size-group">
-                <label>
-                  Size:
-                  <input
-                    type="number"
-                    name="fontSize"
-                    value={textProperties.fontSize}
-                    onChange={handleChange}
-                  />
-                </label>
-              </div>
-              <div className="color-group">
-                <label>
-                  Color:
-                  <input
-                    type="color"
-                    name="color"
-                    value={textProperties.color}
-                    onChange={handleChange}
-                  />
-                </label>
-              </div>
-            </div>
-            <div className="form-group">
-              <button className="icon-button" onClick={() => applyStyle('fontWeight')}>
-                <FontAwesomeIcon icon={faBold} className="icon" />
-              </button>
-              <button className="icon-button" onClick={() => applyStyle('fontStyle')}>
-                <FontAwesomeIcon icon={faItalic} className="icon" />
-              </button>
-              <button className="icon-button" onClick={() => applyStyle('textDecoration')}>
-                <FontAwesomeIcon icon={faUnderline} className="icon" />
-              </button>
-            </div>
-            <div className="form-group">
-              <button className="icon-button" onClick={() => handleAlignText('left', canvas)}>
-                <FontAwesomeIcon icon={faAlignLeft} className="icon" />
-              </button>
-              <button className="icon-button" onClick={() => handleAlignText('center', canvas)}>
-                <FontAwesomeIcon icon={faAlignCenter} className="icon" />
-              </button>
-              <button className="icon-button" onClick={() => handleAlignText('right', canvas)}>
-                <FontAwesomeIcon icon={faAlignRight} className="icon" />
-              </button>
-              <button className="icon-button" onClick={() => handleAlignText('top', canvas)}>
-                <FontAwesomeIcon icon={faAlignJustify} className="icon" />
-              </button>
-              <button className="icon-button" onClick={() => handleAlignText('bottom', canvas)}>
-                <FontAwesomeIcon icon={faAlignJustify} className="icon" />
-              </button>
-            </div>
-          </div>
-        )}
+        {activePanel === 'text' && (
+  <div className="text-settings-window">
+    <button className="icon-button add-text-button" onClick={addText}>
+      Add text
+    </button>
+    <label>
+      Font:
+      <select
+        name="fontFamily"
+        value={textProperties.fontFamily}
+        onChange={handleChange}
+      >
+        {fonts.map(font => (
+          <option key={font} value={font}>{font}</option>
+        ))}
+      </select>
+    </label>
+    <div className="form-group">
+      <div className="font-size-group">
+        <label>
+          Size:
+          <input
+            type="number"
+            name="fontSize"
+            value={textProperties.fontSize}
+            onChange={handleChange}
+          />
+        </label>
+      </div>
+      <div className="color-group">
+        <label>
+          Color:
+          <input
+            type="color"
+            name="color"
+            value={textProperties.color}
+            onChange={handleChange}
+          />
+        </label>
+      </div>
+    </div>
+    <div className="form-group single-row">
+      <button className="icon-button" onClick={() => applyStyle('fontWeight')}>
+        <FontAwesomeIcon icon={faBold} className="icon" />
+      </button>
+      <button className="icon-button" onClick={() => applyStyle('fontStyle')}>
+        <FontAwesomeIcon icon={faItalic} className="icon" />
+      </button>
+      <button className="icon-button" onClick={() => applyStyle('textDecoration')}>
+        <FontAwesomeIcon icon={faUnderline} className="icon" />
+      </button>
+    </div>
+    <div className="form-group single-row">
+      <button className="icon-button" onClick={() => handleAlignText('left', canvas)}>
+        <FontAwesomeIcon icon={faAlignLeft} className="icon" />
+      </button>
+      <button className="icon-button" onClick={() => handleAlignText('center', canvas)}>
+        <FontAwesomeIcon icon={faAlignCenter} className="icon" />
+      </button>
+      <button className="icon-button" onClick={() => handleAlignText('right', canvas)}>
+        <FontAwesomeIcon icon={faAlignRight} className="icon" />
+      </button>
+      <button className="icon-button" onClick={() => handleAlignText('top', canvas)}>
+        <FontAwesomeIcon icon={faAlignJustify} className="icon" />
+      </button>
+      <button className="icon-button" onClick={() => handleAlignText('bottom', canvas)}>
+        <FontAwesomeIcon icon={faAlignJustify} className="icon" />
+      </button>
+    </div>
+  </div>
+)}
+
         <div className="sidebar-item" onClick={toggleShapeSettings}>
           <FontAwesomeIcon icon={faShapes} className="sidebar-icon" />
           <span>Shape</span>
         </div>
-        {isShapeSettingsOpen && (
+        {activePanel === 'shape' && (
           <div className="shape-settings-window">
             <div className="shape-row">
               <ShapeIcon shape="rectangle" onClick={() => addShape('rectangle')} />
@@ -600,7 +654,7 @@ const handlePaste = () => {
           <FontAwesomeIcon icon={faCog} className="sidebar-icon" />
           <span>Customize</span>
         </div>
-        {isCustomizeOpen && (
+        {activePanel === 'customize' && (
           <div className="customize-settings-window">
             <label>
               Width:
@@ -622,27 +676,19 @@ const handlePaste = () => {
             <div className="color-picker">
               <label>Background color:</label>
               <ColorPicker onColorChange={handleBackgroundColorChange} />
-              {/* <div className="color-options">
-                {['#ffffff', '#f0f0f0', '#d3d3d3', '#c0c0c0', '#808080', '#000000', '#ff0000', '#ffa500', '#ffff00', '#008000', '#0000ff'].map(color => (
-                  <div
-                    key={color}
-                    className="color-option"
-                    style={{ backgroundColor: color }}
-                    onClick={() => handleBackgroundColorChange(color)}
-                  />
-                ))}
-                {gradients.map((gradient, index) => (
-                  <div
-                    key={index}
-                    className="color-option"
-                    style={{ background: gradient }}
-                    onClick={() => handleBackgroundColorChange(gradient)}
-                  />
-                ))}
-              </div> */}
             </div>
           </div>
         )}
+        <div className="sidebar-item" onClick={toggleLogosPanel}>
+          <FontAwesomeIcon icon={faImages} className="sidebar-icon" />
+          <span>Logos</span>
+        </div>
+        {activePanel === 'logos' && <LogosPanel logos={logos} onSelectLogo={handleSelectLogo} />}
+        <div className="sidebar-item" onClick={toggleBackgroundsPanel}>
+          <FontAwesomeIcon icon={faImage} className="sidebar-icon" />
+          <span>Backgrounds</span>
+        </div>
+        {activePanel === 'backgrounds' && <BackgroundsPanel backgrounds={backgrounds} onSelectBackground={handleSelectBackground} />}
         <div className="sidebar-item" onClick={handleUploads}>
           <FontAwesomeIcon icon={faUpload} className="sidebar-icon" />
           <span>Uploads</span>
@@ -651,6 +697,7 @@ const handlePaste = () => {
             ref={fileInputRef}
             style={{ display: 'none' }}
             onChange={handleFileSelect}
+            multiple // Allow multiple file selection
           />
         </div>
       </div>
