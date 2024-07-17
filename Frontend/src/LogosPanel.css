@@ -1,29 +1,60 @@
-/* src/components/LogosPanel.css */
-
 .logos-panel {
-    position: absolute;
-    top: 370px; /* Adjust this based on your sidebar height */
-    left: 80px; /* Adjust this based on your sidebar width */
-    width: auto; /* Adjust width as needed */
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    border-radius: 8px; /* Add border radius for rounded corners */
-    z-index: 1000; /* Ensure it's above other elements */
-    display: grid; /* Use CSS Grid */
-    grid-template-columns: repeat(2, 1fr); /* 2 columns */
-    grid-gap: 10px; /* Space between items */
-  }
-  
-  .logo-item {
-    cursor: pointer;
-    text-align: center; /* Center the logos */
-  }
-  
-  .logo-item img {
-    width: 100%;
-    height: auto;
-    max-width: 80px; /* Limit the logo size */
-  }
-  
+  position: absolute;
+  top: 370px;
+  /* Adjust this based on your sidebar height */
+  left: 90px;
+  /* Adjust this based on your sidebar width */
+  width: auto;
+  /* Adjust width as needed */
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  /* Add border radius for rounded corners */
+  z-index: 1000;
+  /* Ensure it's above other elements */
+  display: grid;
+  /* Use CSS Grid */
+  grid-template-columns: repeat(2, 1fr);
+  /* 2 columns */
+  grid-gap: 10px;
+  /* Space between items */
+}
+
+.logo-item {
+  position: relative;
+  /* Needed for positioning the hover text */
+  cursor: pointer;
+  text-align: center;
+  /* Center the logos */
+}
+
+.logo-item img {
+  width: 100%;
+  height: auto;
+  max-width: 80px;
+  /* Limit the logo size */
+}
+
+.logo-item::after {
+  content: attr(data-hover-text);
+  /* Use the data-hover-text attribute for the text */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 5px;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  /* Ensure it doesn't interfere with hover */
+  white-space: nowrap;
+}
+
+.logo-item:hover::after {
+  opacity: 1;
+}
