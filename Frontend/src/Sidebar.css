@@ -254,8 +254,14 @@
   background-color: #0056b3; /* Darker blue on hover */
 }
 
+.color-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
 
-/* .resize-button {
+ .resize-button {
   padding: 10px;
   font-size: 14px;
   font-weight: 600;

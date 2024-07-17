@@ -20,7 +20,8 @@ import logo9 from './logos/JioMoney.jpeg';
 import logo10 from './logos/JioNet.png';
 import logo11 from './logos/JioNewspaper.png';
 import logo12 from './logos/JioSecurity.png';
-import logo13 from './logos/IMG_3193.PNG';
+import logo13 from "./logos/JioGames.png";
+import logo14 from "./logos/IMG_3193.PNG";
 
 import background1 from './backgrounds/image1.png';
 import background2 from './backgrounds/image2.png';
@@ -96,7 +97,7 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
   const fileInputRef = useRef(null);
   const [count, setCount] = useState(0);
   const [selectedShape, setSelectedShape] = useState(null);
-  const logos = [logo1, logo2, logo3, logo4, logo5, logo6, logo7, logo8, logo9, logo10, logo11, logo12, logo13];
+  const logos = [logo1, logo2, logo3, logo4, logo5, logo6, logo7, logo8, logo9, logo10, logo11, logo12, logo13,logo14];
   const backgrounds = [background1, background2 , background3, background4, background5, background6, background7, background8];
 
   const handleSelectLogo = (logo) => {
@@ -559,94 +560,126 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
           <FontAwesomeIcon icon={faTextWidth} className="sidebar-icon" />
           <span>Text</span>
         </div>
-        {activePanel === 'text' && (
-  <div className="text-settings-window">
-    <button className="icon-button add-text-button" onClick={addText}>
-      Add text
-    </button>
-    <label>
-      Font:
-      <select
-        name="fontFamily"
-        value={textProperties.fontFamily}
-        onChange={handleChange}
-      >
-        {fonts.map(font => (
-          <option key={font} value={font}>{font}</option>
-        ))}
-      </select>
-    </label>
-    <div className="form-group">
-      <div className="font-size-group">
-        <label>
-          Size:
-          <input
-            type="number"
-            name="fontSize"
-            value={textProperties.fontSize}
-            onChange={handleChange}
-          />
-        </label>
-      </div>
-      <div className="color-group">
-        <label>
-          Color:
-          <input
-            type="color"
-            name="color"
-            value={textProperties.color}
-            onChange={handleChange}
-          />
-        </label>
-      </div>
-    </div>
-    <div className="form-group single-row">
-      <button className="icon-button" onClick={() => applyStyle('fontWeight')}>
-        <FontAwesomeIcon icon={faBold} className="icon" />
-      </button>
-      <button className="icon-button" onClick={() => applyStyle('fontStyle')}>
-        <FontAwesomeIcon icon={faItalic} className="icon" />
-      </button>
-      <button className="icon-button" onClick={() => applyStyle('textDecoration')}>
-        <FontAwesomeIcon icon={faUnderline} className="icon" />
-      </button>
-    </div>
-    <div className="form-group single-row">
-      <button className="icon-button" onClick={() => handleAlignText('left', canvas)}>
-        <FontAwesomeIcon icon={faAlignLeft} className="icon" />
-      </button>
-      <button className="icon-button" onClick={() => handleAlignText('center', canvas)}>
-        <FontAwesomeIcon icon={faAlignCenter} className="icon" />
-      </button>
-      <button className="icon-button" onClick={() => handleAlignText('right', canvas)}>
-        <FontAwesomeIcon icon={faAlignRight} className="icon" />
-      </button>
-      <button className="icon-button" onClick={() => handleAlignText('top', canvas)}>
-        <FontAwesomeIcon icon={faAlignJustify} className="icon" />
-      </button>
-      <button className="icon-button" onClick={() => handleAlignText('bottom', canvas)}>
-        <FontAwesomeIcon icon={faAlignJustify} className="icon" />
-      </button>
-    </div>
-  </div>
-)}
+        {activePanel === "text" && (
+          <div className="text-settings-window">
+            <button className="icon-button add-text-button" onClick={addText}>
+              Add text
+            </button>
+            <label>
+              Font:
+              <select
+                name="fontFamily"
+                value={textProperties.fontFamily}
+                onChange={handleChange}
+              >
+                {fonts.map((font) => (
+                  <option key={font} value={font}>
+                    {font}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <div className="form-group">
+              <div className="font-size-group">
+                <label>
+                  Size:
+                  <input
+                    type="number"
+                    name="fontSize"
+                    value={textProperties.fontSize}
+                    onChange={handleChange}
+                  />
+                </label>
+              </div>
+              <div className="color-group">
+                <label>
+                  Color:
+                  <input
+                    type="color"
+                    name="color"
+                    value={textProperties.color}
+                    onChange={handleChange}
+                  />
+                </label>
+              </div>
+            </div>
+            <div className="form-group single-row">
+              <button
+                className="icon-button"
+                onClick={() => applyStyle("fontWeight")}
+              >
+                <FontAwesomeIcon icon={faBold} className="icon" />
+              </button>
+              <button
+                className="icon-button"
+                onClick={() => applyStyle("fontStyle")}
+              >
+                <FontAwesomeIcon icon={faItalic} className="icon" />
+              </button>
+              <button
+                className="icon-button"
+                onClick={() => applyStyle("textDecoration")}
+              >
+                <FontAwesomeIcon icon={faUnderline} className="icon" />
+              </button>
+            </div>
+            <div className="form-group single-row">
+              <button
+                className="icon-button"
+                onClick={() => handleAlignText("left", canvas)}
+              >
+                <FontAwesomeIcon icon={faAlignLeft} className="icon" />
+              </button>
+              <button
+                className="icon-button"
+                onClick={() => handleAlignText("center", canvas)}
+              >
+                <FontAwesomeIcon icon={faAlignCenter} className="icon" />
+              </button>
+              <button
+                className="icon-button"
+                onClick={() => handleAlignText("right", canvas)}
+              >
+                <FontAwesomeIcon icon={faAlignRight} className="icon" />
+              </button>
+              <button
+                className="icon-button"
+                onClick={() => handleAlignText("top", canvas)}
+              >
+                <FontAwesomeIcon icon={faAlignJustify} className="icon" />
+              </button>
+              <button
+                className="icon-button"
+                onClick={() => handleAlignText("bottom", canvas)}
+              >
+                <FontAwesomeIcon icon={faAlignJustify} className="icon" />
+              </button>
+            </div>
+          </div>
+        )}
 
         <div className="sidebar-item" onClick={toggleShapeSettings}>
           <FontAwesomeIcon icon={faShapes} className="sidebar-icon" />
           <span>Shape</span>
         </div>
-        {activePanel === 'shape' && (
+        {activePanel === "shape" && (
           <div className="shape-settings-window">
             <div className="shape-row">
-              <ShapeIcon shape="rectangle" onClick={() => addShape('rectangle')} />
-              <ShapeIcon shape="circle" onClick={() => addShape('circle')} />
+              <ShapeIcon
+                shape="rectangle"
+                onClick={() => addShape("rectangle")}
+              />
+              <ShapeIcon shape="circle" onClick={() => addShape("circle")} />
             </div>
             <div className="shape-row">
-              <ShapeIcon shape="triangle" onClick={() => addShape('triangle')} />
-              <ShapeIcon shape="line" onClick={() => addShape('line')} />
+              <ShapeIcon
+                shape="triangle"
+                onClick={() => addShape("triangle")}
+              />
+              <ShapeIcon shape="line" onClick={() => addShape("line")} />
             </div>
             <div className="shape-row">
-              <ShapeIcon shape="diamond" onClick={() => addShape('diamond')} />
+              <ShapeIcon shape="diamond" onClick={() => addShape("diamond")} />
             </div>
           </div>
         )}
@@ -654,7 +687,7 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
           <FontAwesomeIcon icon={faCog} className="sidebar-icon" />
           <span>Customize</span>
         </div>
-        {activePanel === 'customize' && (
+        {activePanel === "customize" && (
           <div className="customize-settings-window">
             <label>
               Width:
@@ -672,10 +705,36 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
                 onChange={(e) => setCanvasHeight(parseInt(e.target.value))}
               />
             </label>
-            <button className="resize-button" onClick={handleResizeCanvas}>Resize Canvas</button>
+            <button className="resize-button" onClick={handleResizeCanvas}>
+              Resize Canvas
+            </button>
             <div className="color-picker">
               <label>Background color:</label>
-              <ColorPicker onColorChange={handleBackgroundColorChange} />
+              <div className="color-options">
+                {[
+                  "#E4F3F7",
+                  "#E8FBF6",
+                  "#E7EAF7",
+                  "#027EA5",
+
+                  "#88DCFE",
+
+                  "#F1E9FA",
+                  "#B88318",
+                  "#010193",
+                  "#380170",
+                  "#7BEAD9",
+                ].map((color) => (
+                  <div
+                    key={color}
+                    className="color-option"
+                    style={{ backgroundColor: color }}
+                    onClick={() => handleBackgroundColorChange(color)}
+                  />
+                ))}
+
+                <ColorPicker onColorChange={handleBackgroundColorChange} />
+              </div>
             </div>
           </div>
         )}
@@ -683,19 +742,26 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
           <FontAwesomeIcon icon={faImages} className="sidebar-icon" />
           <span>Logos</span>
         </div>
-        {activePanel === 'logos' && <LogosPanel logos={logos} onSelectLogo={handleSelectLogo} />}
+        {activePanel === "logos" && (
+          <LogosPanel logos={logos} onSelectLogo={handleSelectLogo} />
+        )}
         <div className="sidebar-item" onClick={toggleBackgroundsPanel}>
           <FontAwesomeIcon icon={faImage} className="sidebar-icon" />
           <span>Backgrounds</span>
         </div>
-        {activePanel === 'backgrounds' && <BackgroundsPanel backgrounds={backgrounds} onSelectBackground={handleSelectBackground} />}
+        {activePanel === "backgrounds" && (
+          <BackgroundsPanel
+            backgrounds={backgrounds}
+            onSelectBackground={handleSelectBackground}
+          />
+        )}
         <div className="sidebar-item" onClick={handleUploads}>
           <FontAwesomeIcon icon={faUpload} className="sidebar-icon" />
           <span>Uploads</span>
           <input
             type="file"
             ref={fileInputRef}
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
             onChange={handleFileSelect}
             multiple // Allow multiple file selection
           />

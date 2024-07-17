@@ -20,7 +20,9 @@ const ColorPicker = ({ onColorChange }) => {
   };
 
   return (
+    
     <div className="color-picker">
+      
       <input
         type="color"
         value={color}
