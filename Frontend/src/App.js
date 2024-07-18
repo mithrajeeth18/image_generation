@@ -3,7 +3,8 @@ import './App.css';
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import DragAndDropWithText from "./DragAndDrop";
-import Footer from "./Footer"; // Import the Footer component
+import Footer from "./Footer";
+import ZoomSlider from "./ZoomSlider"; // Import the ZoomSlider component
 
 function App() {
   const [textProperties, setTextProperties] = useState({
@@ -17,6 +18,7 @@ function App() {
   });
 
   const [canvas, setCanvas] = useState(null);
+  const [zoom, setZoom] = useState(100); // Add zoom state
 
   return (
     <div className="App">
@@ -31,13 +33,14 @@ function App() {
           <DragAndDropWithText 
             textProperties={textProperties} 
             setCanvas={setCanvas} 
+            zoom={zoom} // Pass zoom to the canvas
           />
         </div>
       </div>
-      <Footer /> {/* Add the Footer component */}
+      <ZoomSlider zoom={zoom} setZoom={setZoom} /> {/* Add the ZoomSlider component */}
+      <Footer />
     </div>
   );
 }
 
 export default App;
-

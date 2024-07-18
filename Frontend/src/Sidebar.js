@@ -102,12 +102,13 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
 
   const handleSelectLogo = (logo) => {
     if (canvas) {
+      const zoomFactor = canvas.getZoom();
       fabric.Image.fromURL(logo, (img) => {
         img.set({
-          left: 100,
-          top: 100,
-          scaleX: 0.5,
-          scaleY: 0.5,
+          left: 100 * zoomFactor,
+          top: 100 * zoomFactor,
+          scaleX: 0.5 * zoomFactor,
+          scaleY: 0.5 * zoomFactor,
           selectable: true,
           hasControls: true,
           hasBorders: true,
@@ -118,17 +119,18 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
       });
     }
   };
-
+  
   const handleSelectBackground = (background) => {
     if (canvas) {
       fabric.Image.fromURL(background, (img) => {
         const imgWidth = img.width;
         const imgHeight = img.height;
-
+        const zoomFactor = canvas.getZoom();
+  
         // Set initial scale factors based on canvas size
-        const scaleX = canvas.width / imgWidth;
-        const scaleY = canvas.height / imgHeight;
-
+        const scaleX = (canvas.width / imgWidth);
+        const scaleY = (canvas.height / imgHeight);
+  
         // Set the background image with initial scaling
         img.set({
           left: 0,
@@ -139,18 +141,19 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
           hasControls: false,
           hasBorders: false,
         });
-
+  
         // Store original dimensions in canvas
         canvas.originalBackgroundImageWidth = imgWidth;
         canvas.originalBackgroundImageHeight = imgHeight;
-
+  
         canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
-
+  
         // Close the backgrounds panel after selection
         setActivePanel(null);
       });
     }
   };
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -443,28 +446,39 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
     if (canvas) {
       const newWidth = canvasWidth;
       const newHeight = canvasHeight;
-
+      const zoomFactor = canvas.getZoom();
+  
       // Set new canvas dimensions
       canvas.setWidth(newWidth);
       canvas.setHeight(newHeight);
-
+  
+      // Adjust all objects on the canvas
+      canvas.getObjects().forEach((obj) => {
+        obj.scaleX *= newWidth / canvas.width;
+        obj.scaleY *= newHeight / canvas.height;
+        obj.left *= newWidth / canvas.width;
+        obj.top *= newHeight / canvas.height;
+        obj.setCoords();
+      });
+  
       // Get the background image from canvas
       const backgroundImage = canvas.backgroundImage;
       if (backgroundImage) {
-        // Calculate new scale factors based on new canvas size
-        const scaleX = newWidth / canvas.originalBackgroundImageWidth;
-        const scaleY = newHeight / canvas.originalBackgroundImageHeight;
-
-        // Apply the new scale to the background image
+        const scaleX = (newWidth / canvas.originalBackgroundImageWidth) * zoomFactor;
+        const scaleY = (newHeight / canvas.originalBackgroundImageHeight) * zoomFactor;
+  
         backgroundImage.set({
           scaleX: scaleX,
           scaleY: scaleY,
         });
-
+  
         canvas.renderAll();
       }
     }
   };
+  
+  
+  
 
   const handleBackgroundColorChange = (color) => {
     if (canvas) {
