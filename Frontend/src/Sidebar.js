@@ -588,6 +588,9 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
     handleBackgroundColorChange(gradient);
   };
 
+  useEffect(() => {
+    handleResizeCanvas();
+  }, [canvasWidth,canvasHeight]);
   return (
     <div className="sidebar-container">
       <div className="sidebar">
@@ -756,6 +759,23 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
         </div>
         {activePanel === "customize" && (
           <div className="customize-settings-window">
+            <button
+              onClick={(e) => {
+                setCanvasWidth(1184);
+                setCanvasHeight(520);
+              }}
+            >
+              Web H
+            </button>
+            <button
+              onClick={(e) => {
+                setCanvasWidth(584);
+                setCanvasHeight(720);
+              }}
+              title="Set canvas to 1184x520"
+            >
+              Web V
+            </button>
             <label>
               Width:
               <input
@@ -783,9 +803,7 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
                   "#E8FBF6",
                   "#E7EAF7",
                   "#027EA5",
-
                   "#88DCFE",
-
                   "#F1E9FA",
                   "#B88318",
                   "#010193",
