@@ -355,7 +355,9 @@
   border-radius: 12px;
 }
 
-
+.header {
+  font-size: 20px;
+}
 /* Logos panel */
 .logos-panel {
   background-color: #f8f9fa; /* Light grey background */

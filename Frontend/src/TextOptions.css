@@ -1,0 +1,32 @@
+/* src/components/TextOptions.css */
+
+.text-options {
+    padding: 20px;
+}
+
+.text-option {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.text-option:hover {
+    background-color: #e0e0e0;
+}
+
+.text-option.heading {
+    font-size: 16px;
+}
+
+.text-option.subheading {
+    font-size: 16px;
+}
+
+.text-option.body {
+    font-size: 16px;
+}

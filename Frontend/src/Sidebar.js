@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { SketchPicker } from "react-color";
+import TextOptions from "./txtoption";
+
 import './Sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBold, faItalic, faUnderline, faShapes, faTextWidth, faAlignLeft, faAlignRight, faAlignCenter, faAlignJustify, faCog, faUpload, faImages, faImage } from '@fortawesome/free-solid-svg-icons';
+
 import { fabric } from 'fabric';
 import ColorPicker from './ColorPicker';
 import LogosPanel from './LogosPanel'; 
+
 import BackgroundsPanel from './BackgroundsPanel';
 
 import logo1 from './logos/JioCinema.png';
@@ -327,17 +331,33 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
     if (selectedText) {
       let newValue;
       switch (style) {
-        case 'fontWeight':
-          newValue = selectedText.fontWeight === 'bold' ? 'normal' : 'bold';
-          selectedText.set('fontWeight', newValue);
+        case "fontWeight":
+          newValue = selectedText.fontWeight === "bold" ? "normal" : "bold";
+          selectedText.set("fontWeight", newValue);
           break;
-        case 'fontStyle':
-          newValue = selectedText.fontStyle === 'italic' ? 'normal' : 'italic';
-          selectedText.set('fontStyle', newValue);
+        case "fontStyle":
+          newValue = selectedText.fontStyle === "italic" ? "normal" : "italic";
+          selectedText.set("fontStyle", newValue);
           break;
-        case 'textDecoration':
-          newValue = selectedText.textDecoration.includes('underline') ? selectedText.textDecoration.replace('underline', '') : `${selectedText.textDecoration} underline`;
-          selectedText.set('textDecoration', newValue.trim());
+        case "textDecoration":
+          newValue = selectedText.textDecoration.includes("underline")
+            ? selectedText.textDecoration.replace("underline", "")
+            : `${selectedText.textDecoration} underline`;
+          selectedText.set("textDecoration", newValue.trim());
+          break;
+        case "H1":
+          selectedText.set("fontSize", 40);
+          newValue = selectedText.fontWeight === "bold" ? "normal" : "bold";
+          selectedText.set("fontWeight", newValue);
+          break;
+          
+        case "H2":
+          selectedText.set("fontSize", 30);
+          
+          break;
+        case "H3":
+          selectedText.set("fontSize", 16);
+           
           break;
         default:
           break;
@@ -345,6 +365,7 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
       canvas.renderAll();
     }
   };
+
 
   let clonedObject = null;
 
@@ -576,9 +597,41 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
         </div>
         {activePanel === "text" && (
           <div className="text-settings-window">
+            {/* <TextOptions
+              textProperties={textProperties}
+              setTextProperties={setTextProperties}
+              selectedText={selectedText}
+              canvas={canvas}
+              fonts={fonts}
+              applyStyle={applyStyle}
+              handleAlignText={handleAlignText}
+            /> */}
             <button className="icon-button add-text-button" onClick={addText}>
               Add text
             </button>
+            <div className="form-group single-row">
+              <div className="header">
+                <button
+                  className="icon-button"
+                  onClick={() => applyStyle("H1")}
+                >
+                  <FontAwesomeIcon /> <span>H1</span>
+                </button>
+                <button
+                  className="icon-button"
+                  onClick={() => applyStyle("H2")}
+                >
+                  <FontAwesomeIcon /> <span>H2</span>
+                </button>
+                <button
+                  className="icon-button"
+                  onClick={() => applyStyle("H3")}
+                >
+                  <FontAwesomeIcon className="icon" />
+                  <span>H3</span>
+                </button>
+              </div>
+            </div>
             <label>
               Font:
               <select
@@ -753,7 +806,6 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
           </div>
         )}
         <div className="sidebar-item" onClick={toggleLogosPanel}>
-          <FontAwesomeIcon icon={faImages} className="sidebar-icon" />
           <span>Logos</span>
         </div>
         {activePanel === "logos" && (
