@@ -399,3 +399,14 @@
   color: #333;
 }
 
+.header {
+  font-size: 1.5rem;
+  /* padding: 10px; */
+}
+
+.header .icon-button {
+  font-size: 0.75em;
+  /* Adjust this value as needed */
+  padding: 10px;
+  Optional: Add some padding if needed
+}

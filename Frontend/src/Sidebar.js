@@ -776,6 +776,25 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
             >
               Web V
             </button>
+            <br></br>
+            <button
+              onClick={(e) => {
+                setCanvasWidth(330);
+                setCanvasHeight(520);
+              }}
+              title="Set canvas to 1184x520"
+            >
+               Mobile H
+            </button>
+            <button
+              onClick={(e) => {
+                setCanvasWidth(375);
+                setCanvasHeight(552);
+              }}
+              title="Set canvas to 1184x520"
+            >
+              Mobile V
+            </button>
             <label>
               Width:
               <input
@@ -824,6 +843,7 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
           </div>
         )}
         <div className="sidebar-item" onClick={toggleLogosPanel}>
+          <FontAwesomeIcon icon={faImages} />
           <span>Logos</span>
         </div>
         {activePanel === "logos" && (
