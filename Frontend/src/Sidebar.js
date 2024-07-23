@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { SketchPicker } from "react-color";
 import TextOptions from "./txtoption";
-
+import WebFont from "webfontloader";
 import './Sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBold, faItalic, faUnderline, faShapes, faTextWidth, faAlignLeft, faAlignRight, faAlignCenter, faAlignJustify, faCog, faUpload, faImages, faImage } from '@fortawesome/free-solid-svg-icons';
@@ -35,6 +35,7 @@ import background5 from './backgrounds/image5.jpeg';
 import background6 from './backgrounds/image6.jpeg';
 import background7 from './backgrounds/image7.jpeg';
 import background8 from './backgrounds/image8.png';
+import { text } from '@fortawesome/fontawesome-svg-core';
 
 const ShapeIcon = ({ shape, onClick }) => (
   <div className="shape-button" onClick={onClick}>
@@ -69,6 +70,7 @@ const ShapeIcon = ({ shape, onClick }) => (
 const handleAlignText = (alignment, canvas) => {
   const paddingValue = 30; 
   const activeObject = canvas.getActiveObject();
+  console.log(activeObject);
   if (activeObject && activeObject.type === 'i-text') {
     switch (alignment) {
       case 'left':
@@ -173,11 +175,39 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
       canvas.renderAll();
     }
   };
+  useEffect(() => {
+    WebFont.load({
+      google: {
+        families: [
+          "JioType-Black",
+          "JioType-Bold",
+          "JioType-Light",
+          "JioType-LightItalic",
+          "JioType-Medium",
+          "JioType-MediumItalic",
+        ],
+      },
+    });
+  }, []);
 
   const fonts = [
-    "Arial", "Verdana", "Poppins", "Times New Roman", "Courier New", 
-    "Lucida Console", "Georgia", "Tahoma", "Impact", "Comic Sans MS",
-    "CustomFont1", "CustomFont2" // Add your custom fonts here
+    "Arial",
+    "Verdana",
+    "Poppins",
+    "Times New Roman",
+    "Courier New",
+    "Lucida Console",
+    "Georgia",
+    "Tahoma",
+    "Impact",
+    "Comic Sans MS",
+    "JioType-Black",
+    "JioType-Bold",
+    "JioType-Light",
+    "JioType-LightItalic",
+    "JioType-Medium",
+    "JioType-MediumItalic",
+    // Add your custom fonts here
   ];
 
   useEffect(() => {
@@ -330,6 +360,7 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
   const applyStyle = (style) => {
     if (selectedText) {
       let newValue;
+      let newfont;
       switch (style) {
         case "fontWeight":
           newValue = selectedText.fontWeight === "bold" ? "normal" : "bold";
@@ -347,16 +378,22 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
           break;
         case "H1":
           selectedText.set("fontSize", 40);
-          newValue = selectedText.fontWeight === "bold" ? "normal" : "bold";
-          selectedText.set("fontWeight", newValue);
+        
+          newfont = selectedText.fontFamily = "JioType-Black";
+          selectedText.set("fontFamily",newfont);
+         
           break;
           
         case "H2":
           selectedText.set("fontSize", 30);
+          newfont = selectedText.fontFamily = "JioType-Medium";
+          selectedText.set("fontFamily", newfont);
           
           break;
         case "H3":
           selectedText.set("fontSize", 16);
+          newfont = selectedText.fontFamily = "JioType-Medium";
+          selectedText.set("fontFamily", newfont);
            
           break;
         default:
@@ -437,9 +474,13 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
     };
   }, [canvas]);
 
-  const toggleTextSettings = () => {
+  const toggleTextSettings = () =>
+  {
+    
     setActivePanel(activePanel === 'text' ? null : 'text');
+    
   };
+ 
 
   const toggleShapeSettings = () => {
     setActivePanel(activePanel === 'shape' ? null : 'shape');
@@ -479,6 +520,7 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
         obj.scaleY *= newHeight / canvas.height;
         obj.left *= newWidth / canvas.width;
         obj.top *= newHeight / canvas.height;
+        
         obj.setCoords();
       });
   
@@ -588,9 +630,17 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
     handleBackgroundColorChange(gradient);
   };
 
-  useEffect(() => {
+  useEffect(() =>
+  {
+    
     handleResizeCanvas();
-  }, [canvasWidth,canvasHeight]);
+
+  }, [canvasWidth, canvasHeight]);
+  
+  // useEffect(() => {
+  //   setActivePanel("text");
+  // }, [selectedText]);
+
   return (
     <div className="sidebar-container">
       <div className="sidebar">
@@ -759,42 +809,65 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
         </div>
         {activePanel === "customize" && (
           <div className="customize-settings-window">
-            <button
-              onClick={(e) => {
-                setCanvasWidth(1184);
-                setCanvasHeight(520);
-              }}
-            >
-              Web H
-            </button>
-            <button
-              onClick={(e) => {
-                setCanvasWidth(584);
-                setCanvasHeight(720);
-              }}
-              title="Set canvas to 1184x520"
-            >
-              Web V
-            </button>
-            <br></br>
-            <button
-              onClick={(e) => {
-                setCanvasWidth(330);
-                setCanvasHeight(520);
-              }}
-              title="Set canvas to 1184x520"
-            >
-               Mobile H
-            </button>
-            <button
-              onClick={(e) => {
-                setCanvasWidth(375);
-                setCanvasHeight(552);
-              }}
-              title="Set canvas to 1184x520"
-            >
-              Mobile V
-            </button>
+            <div className="defaultbanner">
+              <button
+                className="btn"
+                data-hover-text="1184x520"
+                onClick={(e) => {
+                  setCanvasWidth(1184);
+                  setCanvasHeight(520);
+                }}
+              >
+                Web H
+              </button>
+              <button
+                className="btn"
+                data-hover-text="584x720"
+                onClick={(e) => {
+                  setCanvasWidth(584);
+                  setCanvasHeight(720);
+                }}
+              >
+                Web V
+              </button>
+              <br></br>
+              <button
+                data-hover-text="290x116"
+                className="btn"
+                onClick={(e) => {
+                  setCanvasWidth(290);
+                  setCanvasHeight(116);
+                }}
+              >
+                Mobile H
+              </button>
+              <button
+                className="btn"
+                data-hover-text="200x250"
+                onClick={(e) => {
+                  setCanvasWidth(200);
+                  setCanvasHeight(250);
+                }}
+
+                //               290x116
+
+                // 200x250
+
+                // 312x447
+              >
+                Mobile V
+              </button>
+              <button
+                className="btn"
+                data-hover-text="312x447"
+                onClick={(e) => {
+                  setCanvasWidth(312);
+                  setCanvasHeight(447);
+                }}
+              >
+                Mobile V2
+              </button>
+            </div>
             <label>
               Width:
               <input
@@ -818,16 +891,22 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
               <label>Background color:</label>
               <div className="color-options">
                 {[
-                  "#E4F3F7",
-                  "#E8FBF6",
-                  "#E7EAF7",
                   "#027EA5",
                   "#88DCFE",
-                  "#F1E9FA",
-                  "#B88318",
-                  "#010193",
-                  "#380170",
+
                   "#7BEAD9",
+                  "#700017",
+                  "#a80000",
+                  "#cd3d00",
+                  "#ac660c",
+                  "#03753c",
+                  "#1e7b74",
+                  "#0c5273",
+                  "#0a2885",
+                  "#000093",
+                  "#3e0084",
+                  "#79007f",
+                  "#ff6dcc",
                 ].map((color) => (
                   <div
                     key={color}

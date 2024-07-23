@@ -237,7 +237,7 @@
 
 .customize-settings-window .resize-button,
 .customize-settings-window .apply-button {
-  background-color: #007bff; /* Primary blue background */
+  background-color: #86b2e0; /* Primary blue background */
   color: white;
   border: none;
   padding: 10px;
@@ -409,4 +409,99 @@
   /* Adjust this value as needed */
   padding: 10px;
   Optional: Add some padding if needed
+}
+
+.defaultbanner{
+  display: flex;
+    flex-wrap: wrap;
+    /* Allows buttons to wrap to the next line if there's not enough space */
+    gap: 10px;
+    /* Space between buttons */
+    justify-content: center;
+    /* Center align buttons horizontally */
+    padding: 10px;
+    background-color: #f4f4f4;
+    /* Light background for the container */
+    border-radius: 10px;
+    /* Rounded corners for the container */
+    border: 1px solid #ddd;
+    /* Border around the container */
+}
+
+.btn {
+  position: relative;
+  /* Required for positioning the pseudo-element */
+  background-color: #86b2e0;
+  /* Bootstrap primary color, adjust as needed */
+  color: #ffffff;
+
+  /* Text color */
+  border: none;
+  /* Remove default border */
+  border-radius: 5px;
+  /* Rounded corners for buttons */
+  padding: 5px 6px;
+  /* Vertical and horizontal padding */
+  font-size: 16px;
+  /* Font size */
+  cursor: pointer;
+  /* Change cursor on hover */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  /* Smooth transition for hover effects */
+}
+
+/* Hover effect */
+.btn::after {
+  content: attr(data-hover-text);
+  position: absolute;
+  top: 50%;
+  /* Position the tooltip centered vertically */
+  left: 50%;
+  transform: translate(-50%, -150%);
+  /* Center the tooltip and move it above the button */
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  opacity: 0;
+  z-index: 1000;
+  /* Ensure the tooltip appears above other elements */
+  transition: opacity 0.3s;
+  pointer-events: none;
+  /* Ensure it doesn't interfere with hover */
+  white-space: nowrap;
+}
+
+.btn:hover::after {
+  opacity: 1;
+  color: #fff;
+}
+@font-face {
+  font-family: 'JioType-Black';
+  src: url('./Font/JioType-Black_0.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'JioType-Bold';
+  src: url('./Font/JioType-Bold_0.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'JioType-Light';
+  src: url('./Font/JioType-Light_0.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'JioType-LightItalic';
+  src: url('./Font/JioType-LightItalic_0.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'JioType-Medium';
+  src: url('./Font/JioType-Medium_0.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'JioType-MediumItalic';
+  src: url('./Font/JioType-MediumItalic_0.ttf') format('truetype');
 }

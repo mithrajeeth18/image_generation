@@ -64,3 +64,12 @@
 .upload-message button:hover {
   background-color: #2980b9;
 }
+
+
+
+.canvas-container{
+  border-radius: 15px;
+    border: 2px solid #dedede;
+    overflow: hidden;
+    display: inline-block;
+}
