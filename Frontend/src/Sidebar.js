@@ -103,7 +103,24 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
   const fileInputRef = useRef(null);
   const [count, setCount] = useState(0);
   const [selectedShape, setSelectedShape] = useState(null);
-  const logos = [logo1, logo2, logo3, logo4, logo5, logo6, logo7, logo8, logo9, logo10, logo11, logo12, logo13,logo14];
+  const logos = [logo1, logo2, logo3, logo4, logo5, logo6, logo7, logo8, logo9, logo10, logo11, logo12, logo13, logo14];
+  const colorPallet = [
+    "#027EA5",
+    "#88DCFE",
+    "#7BEAD9",
+    "#700017",
+    "#a80000",
+    "#cd3d00",
+    "#ac660c",
+    "#03753c",
+    "#1e7b74",
+    "#0c5273",
+    "#0a2885",
+    "#000093",
+    "#3e0084",
+    "#79007f",
+    "#ff6dcc",
+  ];
   const backgrounds = [background1, background2 , background3, background4, background5, background6, background7, background8];
 
   const handleSelectLogo = (logo) => {
@@ -614,21 +631,9 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
     }
   };
 
-  const gradients = [
-    'linear-gradient(to right, #ff7e5f, #feb47b)',
-    'linear-gradient(to right, #6a11cb, #2575fc)',
-    'linear-gradient(to right, #ff6a00, #ee0979)',
-    'linear-gradient(to right, #00c6ff, #0072ff)',
-    'linear-gradient(to right, #f7971e, #ffd200)',
-    'linear-gradient(to right, #7f00ff, #e100ff)',
-    'linear-gradient(to right, #f953c6, #b91d73)',
-    'linear-gradient(to right, #4e54c8, #8f94fb)',
-    'linear-gradient(to right, #12c2e9, #c471ed, #f64f59)'
-  ];
+  
 
-  const handleGradientSelection = (gradient) => {
-    handleBackgroundColorChange(gradient);
-  };
+ 
 
   useEffect(() =>
   {
@@ -637,9 +642,7 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
 
   }, [canvasWidth, canvasHeight]);
   
-  // useEffect(() => {
-  //   setActivePanel("text");
-  // }, [selectedText]);
+
 
   return (
     <div className="sidebar-container">
@@ -650,15 +653,7 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
         </div>
         {activePanel === "text" && (
           <div className="text-settings-window">
-            {/* <TextOptions
-              textProperties={textProperties}
-              setTextProperties={setTextProperties}
-              selectedText={selectedText}
-              canvas={canvas}
-              fonts={fonts}
-              applyStyle={applyStyle}
-              handleAlignText={handleAlignText}
-            /> */}
+            
             <button className="icon-button add-text-button" onClick={addText}>
               Add text
             </button>
@@ -890,24 +885,7 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
             <div className="color-picker">
               <label>Background color:</label>
               <div className="color-options">
-                {[
-                  "#027EA5",
-                  "#88DCFE",
-
-                  "#7BEAD9",
-                  "#700017",
-                  "#a80000",
-                  "#cd3d00",
-                  "#ac660c",
-                  "#03753c",
-                  "#1e7b74",
-                  "#0c5273",
-                  "#0a2885",
-                  "#000093",
-                  "#3e0084",
-                  "#79007f",
-                  "#ff6dcc",
-                ].map((color) => (
+                {colorPallet.map((color) => (
                   <div
                     key={color}
                     className="color-option"
