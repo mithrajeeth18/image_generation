@@ -1,8 +1,10 @@
 .logos-panel {
   position: absolute;
-  top: 370px;
+  top: 340px;
   /* Adjust this based on your sidebar height */
   left: 90px;
+  height: 300px;
+  overflow-y: auto;
   /* Adjust this based on your sidebar width */
   width: auto;
   /* Adjust width as needed */

@@ -54,7 +54,7 @@
   width: 250px; /* Adjusted width */
   position: absolute;
   left: 80px;
-  top: 80px; /* Adjusted position */
+  top: 180px; /* Adjusted position */
   z-index: 10;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Clean font */
@@ -201,7 +201,7 @@
   width: 250px; /* Adjusted width */
   position: absolute;
   left: 80px;
-  top: 280px; /* Adjusted position */
+  top: 150px; /* Adjusted position */
   z-index: 10;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Clean font */

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { sendPostRequest } from './api/api';
 import { SketchPicker } from "react-color";
 import TextOptions from "./txtoption";
 import WebFont from "webfontloader";
@@ -305,7 +306,7 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
         fontStyle: textProperties.fontStyle,
         textDecoration: textProperties.textDecoration,
         hasControls: false,
-        hasBorders: false,
+        hasBorders: true,
       });
       canvas.add(text);
       canvas.setActiveObject(text);
@@ -647,13 +648,160 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
   return (
     <div className="sidebar-container">
       <div className="sidebar">
+        {/* <div className="sidebar-item" onClick={toggleShapeSettings}>
+          <FontAwesomeIcon icon={faShapes} className="sidebar-icon" />
+          <span>Shape</span>
+        </div>
+        {activePanel === "shape" && (
+          <div className="shape-settings-window">
+            <div className="shape-row">
+              <ShapeIcon
+                shape="rectangle"
+                onClick={() => addShape("rectangle")}
+              />
+              <ShapeIcon shape="circle" onClick={() => addShape("circle")} />
+            </div>
+            <div className="shape-row">
+              <ShapeIcon
+                shape="triangle"
+                onClick={() => addShape("triangle")}
+              />
+              <ShapeIcon shape="line" onClick={() => addShape("line")} />
+            </div>
+            <div className="shape-row">
+              <ShapeIcon shape="diamond" onClick={() => addShape("diamond")} />
+            </div>
+          </div>
+        )} */}
+        <div className="sidebar-item" onClick={handleCustomize}>
+          <FontAwesomeIcon icon={faCog} className="sidebar-icon" />
+          <span>Templates</span>
+        </div>
+        {activePanel === "customize" && (
+          <div className="customize-settings-window">
+            <div className="defaultbanner">
+              <button
+                className="btn"
+                data-hover-text="1184x520"
+                onClick={(e) => {
+                  setCanvasWidth(1184);
+                  setCanvasHeight(520);
+                }}
+              >
+                Web H
+              </button>
+              <button
+                className="btn"
+                data-hover-text="584x720"
+                onClick={(e) => {
+                  setCanvasWidth(584);
+                  setCanvasHeight(720);
+                }}
+              >
+                Web V
+              </button>
+              <br></br>
+              <button
+                data-hover-text="290x116"
+                className="btn"
+                onClick={(e) => {
+                  setCanvasWidth(290);
+                  setCanvasHeight(116);
+                }}
+              >
+                Mobile H
+              </button>
+              <button
+                className="btn"
+                data-hover-text="200x250"
+                onClick={(e) => {
+                  setCanvasWidth(200);
+                  setCanvasHeight(250);
+                }}
+
+                //               290x116
+
+                // 200x250
+
+                // 312x447
+              >
+                Mobile V
+              </button>
+              <button
+                className="btn"
+                data-hover-text="312x447"
+                onClick={(e) => {
+                  setCanvasWidth(312);
+                  setCanvasHeight(447);
+                }}
+              >
+                Mobile V2
+              </button>
+            </div>
+            <label>
+              Width:
+              <input
+                type="number"
+                value={canvasWidth}
+                onChange={(e) => setCanvasWidth(parseInt(e.target.value))}
+              />
+            </label>
+            <label>
+              Height:
+              <input
+                type="number"
+                value={canvasHeight}
+                onChange={(e) => setCanvasHeight(parseInt(e.target.value))}
+              />
+            </label>
+            <button className="resize-button" onClick={handleResizeCanvas}>
+              Resize Canvas
+            </button>
+            <div className="color-picker">
+              <label>Background color:</label>
+              <div className="color-options">
+                {colorPallet.map((color) => (
+                  <div
+                    key={color}
+                    className="color-option"
+                    style={{ backgroundColor: color }}
+                    onClick={() => handleBackgroundColorChange(color)}
+                  />
+                ))}
+
+                <ColorPicker onColorChange={handleBackgroundColorChange} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="sidebar-item" onClick={toggleBackgroundsPanel}>
+          <FontAwesomeIcon icon={faImage} className="sidebar-icon" />
+          <span>Backgrounds</span>
+        </div>
+        {activePanel === "backgrounds" && (
+          <BackgroundsPanel
+            backgrounds={backgrounds}
+            onSelectBackground={handleSelectBackground}
+          />
+        )}
+        <div className="sidebar-item" onClick={handleUploads}>
+          <FontAwesomeIcon icon={faUpload} className="sidebar-icon" />
+          <span>Images</span>
+          <input
+            type="file"
+            ref={fileInputRef}
+            style={{ display: "none" }}
+            onChange={handleFileSelect}
+            multiple // Allow multiple file selection
+          />
+        </div>
         <div className="sidebar-item" onClick={toggleTextSettings}>
           <FontAwesomeIcon icon={faTextWidth} className="sidebar-icon" />
           <span>Text</span>
         </div>
         {activePanel === "text" && (
           <div className="text-settings-window">
-            
             <button className="icon-button add-text-button" onClick={addText}>
               Add text
             </button>
@@ -772,133 +920,6 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
             </div>
           </div>
         )}
-
-        <div className="sidebar-item" onClick={toggleShapeSettings}>
-          <FontAwesomeIcon icon={faShapes} className="sidebar-icon" />
-          <span>Shape</span>
-        </div>
-        {activePanel === "shape" && (
-          <div className="shape-settings-window">
-            <div className="shape-row">
-              <ShapeIcon
-                shape="rectangle"
-                onClick={() => addShape("rectangle")}
-              />
-              <ShapeIcon shape="circle" onClick={() => addShape("circle")} />
-            </div>
-            <div className="shape-row">
-              <ShapeIcon
-                shape="triangle"
-                onClick={() => addShape("triangle")}
-              />
-              <ShapeIcon shape="line" onClick={() => addShape("line")} />
-            </div>
-            <div className="shape-row">
-              <ShapeIcon shape="diamond" onClick={() => addShape("diamond")} />
-            </div>
-          </div>
-        )}
-        <div className="sidebar-item" onClick={handleCustomize}>
-          <FontAwesomeIcon icon={faCog} className="sidebar-icon" />
-          <span>Customize</span>
-        </div>
-        {activePanel === "customize" && (
-          <div className="customize-settings-window">
-            <div className="defaultbanner">
-              <button
-                className="btn"
-                data-hover-text="1184x520"
-                onClick={(e) => {
-                  setCanvasWidth(1184);
-                  setCanvasHeight(520);
-                }}
-              >
-                Web H
-              </button>
-              <button
-                className="btn"
-                data-hover-text="584x720"
-                onClick={(e) => {
-                  setCanvasWidth(584);
-                  setCanvasHeight(720);
-                }}
-              >
-                Web V
-              </button>
-              <br></br>
-              <button
-                data-hover-text="290x116"
-                className="btn"
-                onClick={(e) => {
-                  setCanvasWidth(290);
-                  setCanvasHeight(116);
-                }}
-              >
-                Mobile H
-              </button>
-              <button
-                className="btn"
-                data-hover-text="200x250"
-                onClick={(e) => {
-                  setCanvasWidth(200);
-                  setCanvasHeight(250);
-                }}
-
-                //               290x116
-
-                // 200x250
-
-                // 312x447
-              >
-                Mobile V
-              </button>
-              <button
-                className="btn"
-                data-hover-text="312x447"
-                onClick={(e) => {
-                  setCanvasWidth(312);
-                  setCanvasHeight(447);
-                }}
-              >
-                Mobile V2
-              </button>
-            </div>
-            <label>
-              Width:
-              <input
-                type="number"
-                value={canvasWidth}
-                onChange={(e) => setCanvasWidth(parseInt(e.target.value))}
-              />
-            </label>
-            <label>
-              Height:
-              <input
-                type="number"
-                value={canvasHeight}
-                onChange={(e) => setCanvasHeight(parseInt(e.target.value))}
-              />
-            </label>
-            <button className="resize-button" onClick={handleResizeCanvas}>
-              Resize Canvas
-            </button>
-            <div className="color-picker">
-              <label>Background color:</label>
-              <div className="color-options">
-                {colorPallet.map((color) => (
-                  <div
-                    key={color}
-                    className="color-option"
-                    style={{ backgroundColor: color }}
-                    onClick={() => handleBackgroundColorChange(color)}
-                  />
-                ))}
-
-                <ColorPicker onColorChange={handleBackgroundColorChange} />
-              </div>
-            </div>
-          </div>
-        )}
         <div className="sidebar-item" onClick={toggleLogosPanel}>
           <FontAwesomeIcon icon={faImages} />
           <span>Logos</span>
@@ -906,27 +927,6 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
         {activePanel === "logos" && (
           <LogosPanel logos={logos} onSelectLogo={handleSelectLogo} />
         )}
-        <div className="sidebar-item" onClick={toggleBackgroundsPanel}>
-          <FontAwesomeIcon icon={faImage} className="sidebar-icon" />
-          <span>Backgrounds</span>
-        </div>
-        {activePanel === "backgrounds" && (
-          <BackgroundsPanel
-            backgrounds={backgrounds}
-            onSelectBackground={handleSelectBackground}
-          />
-        )}
-        <div className="sidebar-item" onClick={handleUploads}>
-          <FontAwesomeIcon icon={faUpload} className="sidebar-icon" />
-          <span>Uploads</span>
-          <input
-            type="file"
-            ref={fileInputRef}
-            style={{ display: "none" }}
-            onChange={handleFileSelect}
-            multiple // Allow multiple file selection
-          />
-        </div>
       </div>
     </div>
   );

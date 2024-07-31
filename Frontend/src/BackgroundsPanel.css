@@ -1,29 +1,38 @@
 .backgrounds-panel {
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    width: 160px;
-    position: absolute;
-    left: 85px;
-    top: 420px; /* Adjust to ensure it stays below the header */
-    z-index: 10;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .background-item {
-    margin-bottom: 10px;
-    cursor: pointer;
-  }
-  
-  .background-item img {
-    width: 100%;
-    border-radius: 5px;
-    transition: transform 0.3s;
-  }
-  
-  .background-item img:hover {
-    transform: scale(1.05);
-  }
-  
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  width: 160px;
+  position: absolute;
+  left: 85px;
+  top: 220px;
+
+  /* Add a scrollbar if content exceeds height */
+  z-index: 10;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.background-item {
+  margin-bottom: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  /* Center images horizontally */
+}
+
+.background-item img {
+  max-width: 100%;
+  /* Ensure image does not overflow container width */
+  max-height: 200px;
+  /* Set a maximum height to prevent images from being too large */
+  height: auto;
+  /* Maintain aspect ratio */
+  border-radius: 5px;
+  transition: transform 0.3s;
+}
+
+.background-item img:hover {
+  transform: scale(1.05);
+}
