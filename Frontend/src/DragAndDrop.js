@@ -1,10 +1,17 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import "./DragAndDrop.css";
 import { fabric } from "fabric";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 
 const DragAndDropWithText = ({ setCanvas, zoom }) => {
   const canvasRef = useRef(null);
   const fabricCanvasRef = useRef(null);
+  const [showAskAI, setShowAskAI] = useState(false);
+  const [selectedText, setSelectedText] = useState(null);
+  const [aiInputVisible, setAIInputVisible] = useState(false);
+  const [aiInput, setAIInput] = useState("");
+  const [aiButtonPosition, setAIButtonPosition] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
     const canvasElement = canvasRef.current;
@@ -16,21 +23,26 @@ const DragAndDropWithText = ({ setCanvas, zoom }) => {
     fabricCanvasRef.current = fabricCanvas;
     setCanvas(fabricCanvas);
 
-    const handleKeyDown = (e) => {
-      if ((e.key === "Delete" || e.key === "Backspace") && (e.metaKey || e.ctrlKey)) {
-        const activeObject = fabricCanvas.getActiveObject();
-        if (activeObject) {
-          fabricCanvas.remove(activeObject);
-          fabricCanvas.renderAll();
-        }
+    fabricCanvas.on('mouse:up', (e) => {
+      const activeObject = fabricCanvas.getActiveObject();
+      if (activeObject && activeObject.type === 'i-text') {
+        setShowAskAI(true);
+        setSelectedText(activeObject);
+        const boundingRect = activeObject.getBoundingRect();
+        const canvasOffset = canvasElement.getBoundingClientRect();
+        setAIButtonPosition({
+          top: boundingRect.top + canvasOffset.top - 50,
+          left: boundingRect.left + canvasOffset.left + boundingRect.width / 2 - 40,
+        });
+      } else {
+        setShowAskAI(false);
+        setSelectedText(null);
+        setAIInputVisible(false);
       }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
+    });
 
     return () => {
       fabricCanvas.dispose();
-      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [setCanvas]);
 
@@ -67,9 +79,45 @@ const DragAndDropWithText = ({ setCanvas, zoom }) => {
     }
   }, [zoom]);
 
+  const handleAskAIClick = () => {
+    setAIInputVisible(true);
+    setShowAskAI(false);
+  };
+
+  const handleInputChange = (e) => {
+    setAIInput(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    // Send aiInput and selectedText to backend for processing
+    console.log("Send to backend:", aiInput, selectedText);
+    // Reset input
+    setAIInput("");
+    setAIInputVisible(false);
+    setShowAskAI(false);
+  };
+
   return (
     <div className="container">
       <canvas ref={canvasRef} />
+      {showAskAI && (
+        <div className="ask-ai-button" style={{ top: aiButtonPosition.top, left: aiButtonPosition.left }} onClick={handleAskAIClick}>
+          Ask AI
+        </div>
+      )}
+      {aiInputVisible && (
+        <div className="ai-input-container" style={{ top: aiButtonPosition.top, left: aiButtonPosition.left }}>
+          <input 
+            type="text" 
+            value={aiInput} 
+            onChange={handleInputChange} 
+            placeholder="Ask AI to edit or generate" 
+          />
+          <button className="submit-button" onClick={handleSubmit}>
+            <FontAwesomeIcon icon={faArrowUp} />
+          </button>
+        </div>
+      )}
     </div>
   );
 };
