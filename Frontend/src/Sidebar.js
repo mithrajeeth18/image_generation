@@ -232,7 +232,7 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
     if (canvas) {
       canvas.on('selection:created', handleSelection);
       canvas.on('selection:updated', handleSelection);
-      canvas.on('selection:cleared', handleDeselection);
+      canvas.on("selection:cleared", handleDeselection);
     }
     return () => {
       if (canvas) {
@@ -437,6 +437,18 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
     }
   };
 
+  const handleDelete = () => {
+    if (canvas)
+    {
+      const activeObject = canvas.getActiveObject();
+      if (activeObject) {
+        canvas.remove(activeObject);
+        canvas.discardActiveObject();
+        canvas.renderAll();
+      }
+    }
+  };
+
   const handlePaste = () => {
     if (canvas && clonedObject) {
       const clonedInstance = fabric.util.object.clone(clonedObject);
@@ -446,31 +458,36 @@ function Sidebar({ textProperties, setTextProperties, canvas }) {
     }
   };
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
+useEffect(() => {
+  const handleKeyDown = (e) => {
+    // Check if the delete key is pressed without meta or ctrl key
+    if ((e.metaKey || e.ctrlKey) &&(e.key === "Delete" || e.key === "Backspace")) {
       if (selectedText || selectedShape) {
-        if (e.metaKey || e.ctrlKey) {
-          switch (e.key.toLowerCase()) {
-            case "c":
-              e.preventDefault();
-              handleCopy();
-              break;
-            case "v":
-              //e.preventDefault();
-              handlePaste();
-              break;
-            default:
-              break;
-          }
-        }
+        console.log("delete");
+        handleDelete();
       }
-    };
+    } else if (e.metaKey || e.ctrlKey) {
+      // Check for copy and paste with meta or ctrl key
+      switch (e.key.toLowerCase()) {
+        case "c":
+          console.log("copy");
+          e.preventDefault();
+          handleCopy();
+          break;
+        case "v":
+          console.log("paste");
+          handlePaste();
+          break;
+        default:
+          break;
+      }
+    }
+  };
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [selectedText, handleCopy, handlePaste]);
+  window.addEventListener("keydown", handleKeyDown);
+  return () => window.removeEventListener("keydown", handleKeyDown);
+}, [selectedText, selectedShape]);
+
 
   useEffect(() => {
     const handleCanvasClick = (e) => {

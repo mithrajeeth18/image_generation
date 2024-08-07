@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const canvasElements = require("./routes/canvasElements");
-
+const generateCaption = require("./routes/generateCaption");
 dotenv.config();
 
 const app = express();
@@ -30,6 +30,7 @@ mongoose
 
 // Define routes
 app.use("/api/canvas-elements", canvasElements);
+app.use("/api/ai/",generateCaption);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

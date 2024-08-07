@@ -3,6 +3,7 @@ import "./DragAndDrop.css";
 import { fabric } from "fabric";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faRedoAlt, faMagic } from "@fortawesome/free-solid-svg-icons";
+import { generateCaption } from "./api/api";
 
 const DragAndDropWithText = ({ setCanvas, zoom }) => {
   const canvasRef = useRef(null);
@@ -103,6 +104,7 @@ const DragAndDropWithText = ({ setCanvas, zoom }) => {
   const handleAskAIClick = () => {
     setAIInputVisible(true);
     setShowAskAI(false);
+
     setShowOptions(true); // Show options when AI input is visible
   };
 
@@ -117,20 +119,22 @@ const DragAndDropWithText = ({ setCanvas, zoom }) => {
       setShowToneOptions(!showToneOptions);
     } else {
       setAIInput(option);
-      handleSubmit(option);
+      
     }
   };
   
 
   const handleToneOptionClick = (option) => {
     setAIInput(option.label);
-    handleSubmit(option.label);
+    
   };
 
-  const handleSubmit = (input) => {
-    // For now, just display the input as the output
-    setAIOutput(input || aiInput);
-    // Reset input
+  const handleSubmit = async(input) => {
+   
+    const a =await generateCaption(selectedText.text, input);
+    //console.log(a);
+
+    
     setAIInput("");
     setAIInputVisible(false);
     setShowOptions(false);
@@ -170,6 +174,7 @@ const DragAndDropWithText = ({ setCanvas, zoom }) => {
         <div className="ai-input-container" style={{ top: aiButtonPosition.top, left: aiButtonPosition.left }}>
           <input 
             type="text" 
+            name="inputn  "
             value={aiInput} 
             onChange={handleInputChange} 
             placeholder="Ask AI to edit or generate" 
